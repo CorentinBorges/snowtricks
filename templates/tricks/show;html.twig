@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container justify-content-center mt-5">
+        <div class="row row-cols-1 row-cols-md-12">
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
+                    <div class="card-body ">
+
+                        <h3 class="card-title">Tricksname</h3>
+                        <div class="row justify-content-start" >
+                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
+                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
+                            </a>
+                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
+                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
+                            </a>
+                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
+                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
+                            </a>
+                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
+                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
+                             </a>
+
+                            <iframe class="col-12 col-sm-4 mt-5"  src="https://www.youtube.com/embed/UJC5rJkrGx0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe class="col-12 col-sm-4 mt-5"  src="https://www.youtube.com/embed/UJC5rJkrGx0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe class="col-12 col-sm-4 mt-5"  src="https://www.youtube.com/embed/UJC5rJkrGx0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+                        </div>
+
+                        <p class="card-text mt-5">This is a longer card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <ul class="row description-list justify-content-center mt-5">
+                            <li><span class="text-dark">Par:</span> Toto </li>
+                            <li><span class="text-dark">Ajouté le:</span> 05/10/2025</li>
+                            <li><span class="text-dark">Modifié le:</span> 05/10/2025</li>
+                            <li><span class="text-dark">Category:</span> flip</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}Trick 1{% endblock %}
+
