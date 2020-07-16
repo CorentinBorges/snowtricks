@@ -3,7 +3,7 @@ body{
     font-size: 25px;
 
 }
-
+/*todo: responsive text*/
 h1{
     font-family: 'Anton', sans-serif;
     font-size: 60px;
@@ -17,14 +17,7 @@ h1{
     font-weight: 700;
 }
 
-@media all and (min-width: 540px){
-    .nav-link{
-        border-right: 1px white solid;
-        padding-top: 0px;
-        padding-bottom: 0;
-    }
 
-}
 
 
 .nav-link:hover{
@@ -54,7 +47,7 @@ nav .navbar-nav li a{
     text-align: center;
 
 }
-
+/*todo: responsive text*/
 .home-lead{
     color: white;
     font-size: 200%;
