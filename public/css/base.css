@@ -1,12 +1,19 @@
 body{
     background-color: #222222;
-    font-size: 25px;
+    font-size: 22px;
 
 }
-
+/*todo: responsive text*/
 h1{
     font-family: 'Anton', sans-serif;
     font-size: 60px;
+    font-weight: 700;
+}
+
+h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 30px;
+    color: #5eb5e0;
     font-weight: 700;
 }
 
@@ -16,16 +23,6 @@ h1{
     font-size: 25px;
     font-weight: 700;
 }
-
-@media all and (min-width: 540px){
-    .nav-link{
-        border-right: 1px white solid;
-        padding-top: 0px;
-        padding-bottom: 0;
-    }
-
-}
-
 
 .nav-link:hover{
     background: rgb(94, 181, 224);
@@ -54,7 +51,7 @@ nav .navbar-nav li a{
     text-align: center;
 
 }
-
+/*todo: responsive text*/
 .home-lead{
     color: white;
     font-size: 200%;
@@ -90,5 +87,21 @@ nav .navbar-nav li a{
     color: rgb(94, 181, 224);
 }
 
+/*****show*****/
+.description-list{
+    list-style: none;
+}
+
+.description-list li{
+    margin-left: 15px;
+    padding-right: 15px;
+
+}
+
+@media all and (min-width: 576px) {
+    .description-list li{
+        border-right: 1px solid black;
+    }
+}
 
 
