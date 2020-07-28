@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,10 +20,10 @@ class TricksController extends AbstractController
     }
 
     /**
-     * @Route("/trick/{id}",name="app_show")
+     * @Route("/trick/{id}", name="app_show")
      */
-    public function show(Figure $figure)
+    public function show(Image $figure)
     {
-        return $this->render("tricks/show;html.twig");
+        return $this->render("tricks/show.html.twig");
     }
 }
