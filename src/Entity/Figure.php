@@ -58,12 +58,18 @@ class Figure
      * @ORM\OneToMany(targetEntity=Video::class, mappedBy="figure")
      */
     private $videos;
+    /**
+     * @var FigureRepository
+     */
+    private $figureRepository;
+
 
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -222,5 +228,15 @@ class Figure
         }
 
         return $this;
+    }
+
+    public function findFirst()
+    {
+        $images = $this->getImages();
+        foreach ($images as $image) {
+            if ($image->getFirst() == 1) {
+                return $image->getName();
+            }
+        }
     }
 }

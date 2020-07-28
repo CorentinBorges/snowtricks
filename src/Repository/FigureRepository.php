@@ -19,6 +19,18 @@ class FigureRepository extends ServiceEntityRepository
         parent::__construct($registry, Figure::class);
     }
 
+    public function findFirst($id)
+    {
+        return $this->createQueryBuilder('f')
+            ->innerJoin('f.images', 'i')
+            ->addSelect('i')
+            ->andWhere('i.first = 1')
+            ->andWhere('f.id= :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Figure[] Returns an array of Figure objects
     //  */
