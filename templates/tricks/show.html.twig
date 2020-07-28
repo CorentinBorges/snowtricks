@@ -15,7 +15,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content ">
                                     <div class="modal-header">
-                                        <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer figure{#todo: nom figure#}</h5>
+                                        <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer figure: {{ trick.name }}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -31,37 +31,29 @@
                             </div>
                         </div>
                     </div>
-                    <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
+
+                    <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
                     <div class="card-body ">
 
-                        <h3 class="card-title">Tricksname</h3>
+                        <h3 class="card-title">{{ trick.name }}</h3>
                         <div class="row justify-content-start" >
-                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
-                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
-                            </a>
-                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
-                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
-                            </a>
-                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
-                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
-                            </a>
-                            <a  href="{{ asset('images/home.jpg') }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
-                                <img class="col-12" src="{{ asset('images/home.jpg') }}" alt="snow">
-                             </a>
+                            {% for image in trick.images %}
+                                <a  href="{{ asset('images/' ~ image.name) }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
+                                    <img class="col-12" src="{{ asset('images/' ~ image.name) }}" alt="snow">
+                                </a>
+                            {% endfor %}
 
-                            <iframe class="col-12 col-sm-4 mt-5" src="https://www.youtube.com/embed/0uGETVnkujA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <iframe class="col-12 col-sm-4 mt-5"  src="https://www.youtube.com/embed/0uGETVnkujA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <iframe class="col-12 col-sm-4 mt-5"  src="https://www.youtube.com/embed/0uGETVnkujA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+                            {% for video in trick.videos %}
+                                <iframe class="col-12 col-sm-4 mt-5" src="{{ video.link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            {% endfor %}
 
                         </div>
 
-                        <p class="card-text mt-5">explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, ex</p>
+                        <p class="card-text mt-5">{{ trick.description }}</p>
                         <ul class="row description-list justify-content-center mt-5">
-                            <li><span class="text-dark">Par:</span> Toto </li>
-                            <li><span class="text-dark">Ajouté le:</span> 05/10/2025</li>
-                            <li><span class="text-dark">Modifié le:</span> 05/10/2025</li>
-                            <li><span class="text-dark">Category:</span> flip</li>
+                            <li><span class="text-dark">Ajouté le:</span> {{ trick.createdAt|date('d/m/Y') }}</li>
+                            <li><span class="text-dark">Modifié le:</span> {% if trick.modifiedAt is defined%} {{ trick.modifiedAt|date('d/m/Y')}} {% endif %}</li>
+                            <li><span class="text-dark">Category:</span>  {{ trick.groupe }}</li>
                         </ul>
                     </div>
                 </div>
@@ -79,36 +71,18 @@
 
         <<div class="card" >
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <div class="media">
-                        <img src="{{ asset('images/face.jpg') }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
-                        <div class="media-body">
-                            <h5 class="mt-0">George45</h5>
-                            <h5 class="mt-0">Posté le: 05/15/18 </h5>
-                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                {% for message in trick.messages %}
+                    <li class="list-group-item">
+                        <div class="media">
+                            <img src="{{ asset('images/avatars/' ~ message.user.avatarPath) }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
+                            <div class="media-body">
+                                <h5 class="mt-0">{{ message.user.username }}</h5>
+                                <h5 class="mt-0">Posté le: {{ message.createdAt|date('d/m/Y') }} </h5>
+                                {{ message.content }}
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="media">
-                        <img src="{{ asset('images/face.jpg') }}" class="mr-3 col-2" alt="...">
-                        <div class="media-body">
-                            <h5 class="mt-0">George45</h5>
-                            <h5 class="mt-0">Posté le: 05/15/18 </h5>
-                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="media">
-                        <img src="{{ asset('images/face.jpg') }}" class="mr-3 col-2" alt="...">
-                        <div class="media-body">
-                            <h5 class="mt-0">George45</h5>
-                            <h5 class="mt-0">Posté le: 05/15/18 </h5>
-                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                        </div>
-                    </div>
-                </li>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
     </div>

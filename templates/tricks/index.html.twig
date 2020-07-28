@@ -15,7 +15,7 @@
         {% for trick in tricks %}
             <div class="col mb-4">
                 <div class="card">
-                    <a href="{{ path('app_show', {id:1}) }}">
+                    <a href="{{ path('app_show', {id: trick.id}) }}">
                         <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
                     </a>
                     <div class="card-body row col-12">

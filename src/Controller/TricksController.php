@@ -18,7 +18,8 @@ class TricksController extends AbstractController
         $tricks = $figureRepository->findAll();
         return $this->render('tricks/index.html.twig', [
             'controller_name' => 'TricksController',
-            'tricks'=>$tricks
+            'tricks' => $tricks,
+
         ]);
     }
 
@@ -28,7 +29,8 @@ class TricksController extends AbstractController
     public function show(Figure $figure)
     {
         return $this->render("tricks/show.html.twig",[
-            'figures'=> $figure
+            'trick'=> $figure,
+
         ]);
     }
 }
