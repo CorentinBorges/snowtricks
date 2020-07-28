@@ -12,82 +12,22 @@
     </div>
 
     <div class="row row-cols-1 row-cols-md-5 justify-content-left ml-1 mr-1" id="trick-list">
-        <div class="col mb-4">
-            <div class="card">
-                <a href="{{ path('app_show', {id:1}) }}">
-                    <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
-                </a>
-                <div class="card-body row col-12">
-                    <h5 class="card-title">Card title</h5>
-                    <div class="justify-content-end col-8 text-right">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
+        {% for trick in tricks %}
+            <div class="col mb-4">
+                <div class="card">
+                    <a href="{{ path('app_show', {id: trick.id}) }}">
+                        <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
+                    </a>
+                    <div class="card-body row col-12">
+                        <h5 class="card-title">{{ trick.name }}</h5>
+                        <div class="justify-content-end col-8 text-right">
+                            <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
+                            <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card">
-                <a href="{{ path('app_homepage') }}">
-                    <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
-                </a>
-                <div class="card-body row col-12">
-                    <h5 class="card-title">Card title</h5>
-                    <div class="justify-content-end col-8 text-right">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card">
-                <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
-                <div class="card-body row col-12">
-                    <h5 class="card-title">Card title</h5>
-                    <div class="justify-content-end col-8 text-right">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card">
-                <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
-                <div class="card-body row col-12">
-                    <h5 class="card-title">Card title</h5>
-                    <div class="justify-content-end col-8 text-right">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card">
-                <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
-                <div class="card-body row col-12">
-                    <h5 class="card-title">Card title</h5>
-                    <div class="justify-content-end col-8 text-right">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card">
-                <img src="{{ asset('images/home.jpg') }}" class="card-img-top" alt="...">
-                <div class="card-body row col-12">
-                    <h5 class="card-title">Card title</h5>
-                    <div class="justify-content-end col-8 text-right">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
     <a href="#home-top" id="arrow-up"><i class="fas fa-arrow-up"></i></a>
 {% endblock %}
