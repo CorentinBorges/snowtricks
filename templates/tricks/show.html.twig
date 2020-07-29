@@ -7,30 +7,32 @@
 
             <div class="col mb-4">
                 <div class="card">
-                    <div class="justify-content-end text-right mr-4">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="justify-content-end text-right mr-4">
+                            <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
 
-                        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content ">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer figure: {{ trick.name }}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body justify-content-start text-left">
-                                        ⚠ Voulez vous vraiment supprimer cette figure?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
-                                        <button type="button" class="btn btn-danger">Supprimer</button>
+                            <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer figure: {{ trick.name }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body justify-content-start text-left">
+                                            ⚠ Voulez vous vraiment supprimer cette figure?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                            <button type="button" class="btn btn-danger">Supprimer</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
 
                     <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
                     <div class="card-body ">
@@ -60,16 +62,18 @@
             </div>
         </div>
 
-        <div class="card" >
-            <form class="pt-2 pb-2 justify-content-center text-center">
-                <div class="form-group container">
-                    <label for="comment" >Laisser un commentaire</label>
-                    <textarea id="comment" class="form-control" rows="2" name="comment" cols="25"></textarea>
-                </div>
-            </form>
-        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="card" >
+                <form class="pt-2 pb-2 justify-content-center text-center">
+                    <div class="form-group container">
+                        <label for="comment"> Laisser un commentaire</label>
+                        <textarea id="comment" class="form-control" rows="2" name="comment" cols="25"></textarea>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
 
-        <<div class="card" >
+        <div class="card" >
             <ul class="list-group list-group-flush">
                 {% for message in trick.messages %}
                     <li class="list-group-item">
@@ -83,6 +87,7 @@
                         </div>
                     </li>
                 {% endfor %}
+{#                TODO: boutton loadmore+ afficher nombre limité de commentaires#}
             </ul>
         </div>
     </div>

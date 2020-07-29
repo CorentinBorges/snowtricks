@@ -2,8 +2,6 @@ body {
     background-color: #222222;
     font-size: 22px;
     color: white;
-
-
 }
 /*todo: responsive text*/
 h1{
@@ -19,6 +17,10 @@ h3 {
     font-weight: 700;
 }
 
+.card{
+    color: black;
+}
+
 /*****nav******/
 
 .nav-link,.navbar-brand{
@@ -31,7 +33,11 @@ h3 {
 }
 
 nav .navbar-nav li a{
-    color: white !important;
+    color: white ;
+}
+
+.logout {
+    color: red !important;
 }
 
 /*******home********/
