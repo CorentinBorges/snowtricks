@@ -9,6 +9,11 @@ h1{
     font-size: 60px;
     font-weight: 700;
 }
+h2{
+    font-family: 'Anton', sans-serif;
+    font-size: 50px;
+    font-weight: 700;
+}
 
 h3 {
     font-family: 'Anton', sans-serif;

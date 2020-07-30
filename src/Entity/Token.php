@@ -107,4 +107,5 @@ class Token
 
         return $this;
     }
+
 }
