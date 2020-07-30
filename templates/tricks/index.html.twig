@@ -4,9 +4,13 @@
 
 {% block body %}
     {% for message in app.flashes('registerSuccess') %}
-        <div class="alert alert-success">
+        <div class="alert alert-success container">
             {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+
     {% endfor %}
     <div class="jumbotron jumbotron-fluid text-right " id="home-top">
         <div class="container " id="jumbo-container">

@@ -73,11 +73,17 @@ class User implements UserInterface
      */
     private $isValid;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Token::class, mappedBy="user")
+     */
+    private $tokens;
+
 
 
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->tokens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,6 +222,37 @@ class User implements UserInterface
     public function setIsValid(bool $isValid): self
     {
         $this->isValid = $isValid;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Token[]
+     */
+    public function getTokens(): Collection
+    {
+        return $this->tokens;
+    }
+
+    public function addToken(Token $token): self
+    {
+        if (!$this->tokens->contains($token)) {
+            $this->tokens[] = $token;
+            $token->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeToken(Token $token): self
+    {
+        if ($this->tokens->contains($token)) {
+            $this->tokens->removeElement($token);
+            // set the owning side to null (unless already changed)
+            if ($token->getUser() === $this) {
+                $token->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -45,7 +47,7 @@ class SecurityController extends AbstractController
      * @return Response
      * @Route("/signIn",name="app_signIn")
      */
-    public function register(EntityManagerInterface $entityManager,Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(EntityManagerInterface $entityManager,Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer)
     {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
@@ -61,6 +63,14 @@ class SecurityController extends AbstractController
                 ->setIsValid(false);
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $email = (new Email())
+                ->from('corentin1309@gmail.com')
+                ->to($form['email']->getData())
+                ->subject("Snowricks: confirmation par mail")
+                ->text('mail de confirmation');
+            $mailer->send($email);
+
             $this->addFlash('registerSuccess',"Un mail de confirmation vous à été envoyé à l'adresse ".$form['email']->getData());
            return $this->redirectToRoute('app_homepage');
         }
