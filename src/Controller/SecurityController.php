@@ -5,19 +5,15 @@ namespace App\Controller;
 use App\Entity\Token;
 use App\Entity\User;
 use App\Form\UserRegistrationFormType;
-use App\Repository\TokenRepository;
+use App\Service\MailSender;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -40,7 +36,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route("/logout", name="app_logout", methods="POST")
      */
     public function logout()
     {
@@ -58,11 +54,8 @@ class SecurityController extends AbstractController
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $userModel = $form->getData();
-
 
             $user = new User();
-
             $user
                 ->setRoles(['ROLE_ADMIN'])
                 ->setEmail($form['email']->getData())//TODO: demander à karim pourquoi setEmail($userModel['email'] ne fonctionne pas
@@ -72,32 +65,16 @@ class SecurityController extends AbstractController
             $entityManager->persist($user);
 
             $token = new Token();
-
-            $now = new \DateTime();
-            $time = new \DateTime();
-            $expireTime = $time->modify('+1 hour');
-            $token
-                ->setName(uniqid() . uniqid())
-                ->setUser($user)
-                ->setCreatedAt($now)
-                ->setExpiredAt($expireTime)
-                ->setIsUsed(false);
+            $token->createToken($user);
             $entityManager->persist($token);
+
             $entityManager->flush();
 
-            $email = (new Email())
-                ->from('cb.corentinborges@gmail.com')
-                ->to($form['email']->getData())
-                ->subject("Snowtricks: confirmation par mail")
-                ->text('Mail de confirmation')
-                ->html('
-                    <h1>Confirmation d\'inscription snowtricks</h1>
-                    <p>Veuillez confirmer votre inscription en cliquant sur 
-                    <a href="https://localhost:8000/confirmation/'.$token->getName().'"> Ce lien</a>
-                    </p>');
-            $mailer->send($email);
+            $mailSender = new MailSender($mailer);
+            $mailSender->sendConfirmationMail('cb.corentinborges@gmail.com',$form['email']->getData(),$token->getName());
 
             $this->addFlash('registerSuccess',"Un mail de confirmation vous à été envoyé à l'adresse ".$form['email']->getData());
+
            return $this->redirectToRoute('app_homepage');
         }
 
@@ -110,10 +87,13 @@ class SecurityController extends AbstractController
     /**
      * @Route("/confirmation/{name}",name="app_confirmUser")
      * @param Token $token
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
      * @return Response
      */
     public function confirmUser(Token $token,EntityManagerInterface $entityManager,Request $request)
     {
+        //todo: expired at a enclencher
         if ($token->getIsUsed()) {
           throw new NotFoundHttpException();
         }
@@ -122,8 +102,6 @@ class SecurityController extends AbstractController
         $user->setIsValid(true);
         $token->setIsUsed(true);
         $entityManager->flush();
-
-
 
         return $this->render('security/confirmUser.html.twig');
     }

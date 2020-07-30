@@ -108,4 +108,16 @@ class Token
         return $this;
     }
 
+    public function createToken(User $user)
+    {
+        $now = new \DateTime();
+        $time = new \DateTime();
+        $expireTime = $time->modify('+5 days');
+        $this
+            ->setName(uniqid() . uniqid())
+            ->setUser($user)
+            ->setCreatedAt($now)
+            ->setExpiredAt($expireTime)
+            ->setIsUsed(false);
+    }
 }
