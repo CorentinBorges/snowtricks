@@ -3,6 +3,11 @@
 {% block title %}SnowTricks-Accueil{% endblock %}
 
 {% block body %}
+    {% for message in app.flashes('registerSuccess') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div class="jumbotron jumbotron-fluid text-right " id="home-top">
         <div class="container " id="jumbo-container">
             <h1>SnowTricks</h1>
@@ -10,6 +15,7 @@
         </div>
         <a href="#trick-list" id="arrow-down"><i class="fas fa-arrow-down" ></i></a>
     </div>
+
 
     <div class="row row-cols-1 row-cols-md-5 justify-content-left ml-1 mr-1" id="trick-list">
         {% for trick in tricks %}

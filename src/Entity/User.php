@@ -6,10 +6,20 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="Un utilisateur est déjà inscrit avec cet email",
+ * )
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     message="Ce nom d'utilisateur est déjà pris"
+ * )
  */
 class User implements UserInterface
 {
@@ -22,6 +32,11 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Length(min="3",
+     *     minMessage="Le nom d'utilisateur doit contenir au moin 3 caractères",
+     *     max="20",
+     *     maxMessage="Le nom d'utilisateur ne peut pas dépasser 20 caractères")
+     * @Assert\NotBlank(message="Le champ 'nom d'utilisateur' ne peut pas être vide")
      */
     private $username;
 
@@ -38,6 +53,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Assert\Email(message="Veuillez entrer un email valide")
+     * @Assert\NotBlank(message="Le champ mail ne peut pas être vide")
      */
     private $email;
 
@@ -50,6 +67,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=200, nullable=true)
      */
     private $avatarPath;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isValid;
 
 
 
@@ -182,6 +204,18 @@ class User implements UserInterface
     public function setAvatarPath(?string $avatarPath): self
     {
         $this->avatarPath = $avatarPath;
+
+        return $this;
+    }
+
+    public function getIsValid(): ?bool
+    {
+        return $this->isValid;
+    }
+
+    public function setIsValid(bool $isValid): self
+    {
+        $this->isValid = $isValid;
 
         return $this;
     }
