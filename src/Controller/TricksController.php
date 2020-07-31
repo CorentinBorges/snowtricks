@@ -6,6 +6,7 @@ use App\Entity\Figure;
 use App\Entity\Image;
 use App\Repository\FigureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TricksController extends AbstractController
@@ -13,8 +14,9 @@ class TricksController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function index(FigureRepository $figureRepository)
+    public function index(FigureRepository $figureRepository,Request $request)
     {
+//        dd($request->server->get('HTTP_HOST'));
         $tricks = $figureRepository->findAll();
         return $this->render('tricks/index.html.twig', [
             'controller_name' => 'TricksController',
