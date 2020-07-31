@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <head>
+    <head>{#TODO: meta for best reference#}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block title %}Accueil{% endblock %}</title>
@@ -35,7 +35,7 @@
                                 <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">S'enregistrer</a>
+                                <a class="nav-link" href="{{ path('app_signIn') }}">S'enregistrer</a>
                             </li>
                         {% endif %}
 
