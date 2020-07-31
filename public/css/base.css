@@ -117,4 +117,9 @@ nav .navbar-nav li a{
     }
 }
 
+/***newTrick***/
+.custom-file-label::after {
+    content: "Charger";
+}
+
 

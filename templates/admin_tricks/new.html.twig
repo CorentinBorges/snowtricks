@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Trick{% endblock %}
+
+{% block body %}
+    <h2 class="text-center mt-5">Ajouter un trick</h2>
+<div class="container justify-content-center mt-5">
+
+    <div class="row row-cols-1 row-cols-md-12">
+
+        <div class="col mb-4">
+            <div class="card pt-4 pb-4">
+                <div class="container">
+                    {{ form_start(trickForm) }}
+                        {{ form_widget(trickForm) }}
+
+                    <button type="submit" class="btn btn-primary">Enregistrer le trick</button>
+                    {{ form_end(trickForm) }}
+                    <p class="mt-3 text-left">*  Champs obligatoires</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+ {{ parent() }}
+<script>$(document).on('change', '.custom-file-input', function () {
+        let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+        $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+    });
+</script>
+{% endblock %}
