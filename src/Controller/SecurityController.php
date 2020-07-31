@@ -93,8 +93,9 @@ class SecurityController extends AbstractController
      */
     public function confirmUser(Token $token,EntityManagerInterface $entityManager,Request $request)
     {
-        //todo: expired at a enclencher
-        if ($token->getIsUsed()) {
+        //todo: tester expired at le 8 aout
+        $now = new \DateTime("now");
+        if ($token->getIsUsed() || $token->getExpiredAt()<$now) {
           throw new NotFoundHttpException();
         }
 

@@ -21,12 +21,12 @@ class UserRegistrationFormType extends AbstractType
     {
         $builder
             ->add('username', TextType::class,[
-                'label'=>'nom d\'utilisateur',
+                'label'=>'Nom d\'utilisateur',
             ])
             ->add('password',PasswordType::class,[
                 'mapped'=>false,
                 'required'=>true,
-                'label'=>'mot de passe',
+                'label'=>'Mot de passe',
                 'constraints'=>[
                     new Length([
                         "min"=>self::PASS_MIN,
