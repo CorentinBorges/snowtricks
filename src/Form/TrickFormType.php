@@ -87,8 +87,8 @@ class TrickFormType extends AbstractType
                             'message'=>"veuillez rentrer un url valide"
                         ]),
                         new Regex([
-                            'pattern'=>'#(^https://youtu.be/)|(^https://www.youtube.com/)#',
-                            'message'=>'Veuillez entrer un lien youtube'
+                            'pattern'=>'#^https://youtu.be/#',
+                            'message'=>'Veuillez coller un lien youtube avec : click droit->"Copier l\'URL de la video"'
                         ])
                     ]
                 ]);

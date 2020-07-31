@@ -73,7 +73,7 @@ class SecurityController extends AbstractController
             $mailSender = new MailSender($mailer,$request);
             $mailSender->sendConfirmationMail('cb.corentinborges@gmail.com',$form['email']->getData(),$token->getName());
 
-            $this->addFlash('registerSuccess',"Un mail de confirmation vous à été envoyé à l'adresse ".$form['email']->getData());
+            $this->addFlash('success',"Un mail de confirmation vous à été envoyé à l'adresse ".$form['email']->getData());
 
            return $this->redirectToRoute('app_homepage');
         }
