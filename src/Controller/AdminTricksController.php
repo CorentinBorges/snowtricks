@@ -21,11 +21,14 @@ class AdminTricksController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($form['image']->getData()->getClientOriginalName());
+            if(isset($form['image'])){
+                dump($form['image']->getData()->getClientOriginalName());
 
-            /** @var  $file File */
-            $file = $form['image']->getData();
-            $file->move('images',$form['image']->getData()->getClientOriginalName());
+                /** @var  $file File */
+                $file = $form['image']->getData();
+                $file->move('images',$form['image']->getData()->getClientOriginalName());
+            }
+
         }
 
         return $this->render('admin_tricks/new.html.twig', [
