@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Video;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,11 +12,19 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Video[]    findAll()
  * @method Video[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class VideoRepository extends ServiceEntityRepository
+class VideoRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Video::class);
+        parent::__construct($registry, Video::class,$entityManager);
+    }
+
+    public function deleteVideosFromTrick($trickId)
+    {
+        $tricksVideos = $this->findBy(["figure" => $trickId]);
+        foreach ($tricksVideos as $tricksVideo) {
+            $this->entityManager->remove($tricksVideo);
+        }
     }
 
     // /**

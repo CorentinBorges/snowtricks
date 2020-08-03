@@ -6,6 +6,10 @@ use App\Entity\Figure;
 use App\Entity\Image;
 use App\Entity\Video;
 use App\Form\TrickFormType;
+use App\Repository\FigureRepository;
+use App\Repository\ImageRepository;
+use App\Repository\MessageRepository;
+use App\Repository\VideoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,7 +41,7 @@ class AdminTricksController extends AbstractController
                 ->setCreatedAtNow();
             $entityManager->persist($figure);
 
-
+            //Todo: factoriser??
             for ($i=1;$i<=TrickFormType::NB_IMAGE;$i++) {
                 if (isset($form['image'.$i]) && !empty($form['image'.$i]->getData())) {
                     $image = new Image();
@@ -50,12 +54,9 @@ class AdminTricksController extends AbstractController
 
                     $entityManager->persist($image);
 
-                    ;
                     /** @var  $file File */
                     $file = $form['image'.$i]->getData();
                     $file->move('images',$imageName);
-
-
                 }
             }
 
@@ -81,5 +82,27 @@ class AdminTricksController extends AbstractController
             'trickForm' => $form->createView(),
 
         ]);
+    }
+
+    /**
+     * @Route("/delete/{id}",name="admin_tricks_delete")
+     * @param Figure $figure
+     * @param ImageRepository $imageRepository
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @param VideoRepository $videoRepository
+     * @param FigureRepository $figureRepository
+     * @param MessageRepository $messageRepository
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteTrick(Figure $figure, ImageRepository $imageRepository, $id, EntityManagerInterface $entityManager, VideoRepository $videoRepository, FigureRepository $figureRepository,MessageRepository $messageRepository)
+    {
+        $imageRepository->deletePicsFromTrick($id);
+        $videoRepository->deleteVideosFromTrick($id);
+        $messageRepository->deleteMessagesFromTrick($id);
+        $figureRepository->deleteTrick($id);
+        $entityManager->flush();
+        $this->addFlash('success','Le trick à bien été supprimé');
+        return $this->redirectToRoute('app_homepage');
     }
 }

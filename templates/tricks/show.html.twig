@@ -8,7 +8,7 @@
             <div class="col mb-4">
                 <div class="card">
                     {% if is_granted('ROLE_ADMIN') %}
-                        <div class="justify-content-end text-right mr-4">
+                        <div class="justify-content-end text-right mr-4 mb-2 mt-2">
                             <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
 
@@ -26,7 +26,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
-                                            <button type="button" class="btn btn-danger">Supprimer</button>
+                                            <button type="button" class="btn btn-danger"><a class="del_button" href="{{ path('admin_tricks_delete', {id: trick.id}) }}">Supprimer</a></button>
                                         </div>
                                     </div>
                                 </div>
@@ -34,16 +34,22 @@
                         </div>
                     {% endif %}
 
-                    <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
+                    {% if trick.findFirst is not null %}
+                        <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
+                    {% else %}
+                        <img src="{{ asset('images/trick1.jpg') }}" class="card-img-top" alt="...">
+                    {% endif %}
                     <div class="card-body ">
 
                         <h3 class="card-title">{{ trick.name }}</h3>
                         <div class="row justify-content-start" >
-                            {% for image in trick.images %}
-                                <a  href="{{ asset('images/' ~ image.name) }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
-                                    <img class="col-12" src="{{ asset('images/' ~ image.name) }}" alt="snow">
-                                </a>
-                            {% endfor %}
+                            {% if trick.images is not null %}
+                                {% for image in trick.images %}
+                                    <a  href="{{ asset('images/' ~ image.name) }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
+                                        <img class="col-12" src="{{ asset('images/' ~ image.name) }}" alt="snow">
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
 
                             {% for video in trick.videos %}
                                 <iframe class="col-12 col-sm-4 mt-5" src="{{ video.link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

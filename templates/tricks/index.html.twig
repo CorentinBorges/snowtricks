@@ -26,14 +26,39 @@
             <div class="col mb-4">
                 <div class="card">
                     <a href="{{ path('app_show', {id: trick.id}) }}">
-                        <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
+                        {% if trick.findFirst is not null %}
+                            <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
+                        {% else %}
+                            <img src="{{ asset('images/trick1.jpg') }}" class="card-img-top" alt="...">
+
+                        {% endif %}
                     </a>
                     <div class="card-body row col-12">
-                        <h5 class="card-title col-7">{{ trick.name }}</h5>
+                        <h5 class="card-title col-6">{{ trick.name }}</h5>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <div class="justify-content-end col-4 text-right">
+                            <div class="justify-content-end col-6 text-right">
                                 <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="index.html.twig"><i class="far fa-trash-alt"></i></a>
+{#                                <a href="{{ path('admin_tricks_delete', {id: trick.id}) }}"><i class="far fa-trash-alt"></i></a>#}
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
+                                <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content ">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer figure: {{ trick.name }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body justify-content-start text-left">
+                                                ⚠ Voulez vous vraiment supprimer cette figure?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                <button type="button" class="btn btn-danger"><a class="del_button" href="{{ path('admin_tricks_delete', {id: trick.id}) }}">Supprimer</a></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         {% endif %}
 

@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Figure;
+use App\Entity\Image;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,11 +14,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Figure[]    findAll()
  * @method Figure[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FigureRepository extends ServiceEntityRepository
+class FigureRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Figure::class);
+        parent::__construct($registry, Figure::class,$entityManager);
     }
 
     public function findFirst($id)
@@ -29,6 +31,12 @@ class FigureRepository extends ServiceEntityRepository
             ->setParameter('val', $id)
             ->getQuery()
             ->getResult();
+    }
+
+    public function deleteTrick($id)
+    {
+        $trick = $this->findOneBy(["id"=>$id]);
+        $this->entityManager->remove($trick);
     }
 
     // /**
