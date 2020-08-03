@@ -30,7 +30,6 @@
                             <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
                         {% else %}
                             <img src="{{ asset('images/trick1.jpg') }}" class="card-img-top" alt="...">
-
                         {% endif %}
                     </a>
                     <div class="card-body row col-12">
@@ -54,6 +53,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+
                                                 <button type="button" class="btn btn-danger"><a class="del_button" href="{{ path('admin_tricks_delete', {id: trick.id}) }}">Supprimer</a></button>
                                             </div>
                                         </div>
