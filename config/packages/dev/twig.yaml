@@ -3,4 +3,3 @@ twig:
     form_themes:
         - bootstrap_4_layout.html.twig
     cache: false
-#    todo: activate cache for prod (demander à karim)

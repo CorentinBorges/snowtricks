@@ -3,6 +3,7 @@ body {
     font-size: 22px;
     color: white;
 }
+
 /*todo: responsive text*/
 h1{
     font-family: 'Anton', sans-serif;
@@ -24,6 +25,16 @@ h3 {
 
 .card{
     color: black;
+}
+
+.del_button {
+    color: white;
+}
+
+.del_button:hover {
+    color: white;
+    text-decoration: none;
+
 }
 
 /*****nav******/

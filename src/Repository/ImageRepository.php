@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Image;
+use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,14 +14,20 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Image[]    findAll()
  * @method Image[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ImageRepository extends ServiceEntityRepository
+class ImageRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Image::class);
+        parent::__construct($registry, Image::class,$entityManager);
     }
 
-
+    public function deletePicsFromTrick($trickId)
+    {
+        $tricksPics = $this->findBy(["figure" => $trickId]);
+        foreach ($tricksPics as $tricksPic) {
+            $this->entityManager->remove($tricksPic);
+        }
+    }
     // /**
     //  * @return Image[] Returns an array of Image objects
     //  */

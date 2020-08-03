@@ -17,8 +17,6 @@ class TricksController extends AbstractController
      */
     public function index(FigureRepository $figureRepository,Request $request)
     {
-
-
         $tricks = $figureRepository->findAll();
         return $this->render('tricks/index.html.twig', [
             'controller_name' => 'TricksController',

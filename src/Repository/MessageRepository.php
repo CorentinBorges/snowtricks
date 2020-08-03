@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,11 +13,20 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Message[]    findAll()
  * @method Message[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MessageRepository extends ServiceEntityRepository
+class MessageRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface  $entityManager)
     {
-        parent::__construct($registry, Message::class);
+        parent::__construct($registry, Message::class,$entityManager);
+    }
+
+    public function deleteMessagesFromTrick($id)
+    {
+        $messages = $this->findBy(["figure"=>$id]);
+        foreach ($messages as $message) {
+            $this->entityManager->remove($message);
+        }
+
     }
 
     // /**
