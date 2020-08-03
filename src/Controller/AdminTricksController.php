@@ -10,9 +10,11 @@ use App\Repository\FigureRepository;
 use App\Repository\ImageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\VideoRepository;
+use App\Service\EntityObjectCreator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,56 +26,21 @@ class AdminTricksController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
+     * @param EntityObjectCreator $entityCreator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index(Request $request, EntityManagerInterface $entityManager)
+    public function add(Request $request, EntityManagerInterface $entityManager, EntityObjectCreator $entityCreator)
     {
         $form = $this->createForm(TrickFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $figure = new Figure();
-            $figure
-                ->setName($form['name']->getData())
-                ->setDescription($form['description']->getData())
-                ->setGroupe($form['groupe']->getData())
-                ->setCreatedAtNow();
-            $entityManager->persist($figure);
-
-            //Todo: factoriser??
-            for ($i=1;$i<=TrickFormType::NB_IMAGE;$i++) {
-                if (isset($form['image'.$i]) && !empty($form['image'.$i]->getData())) {
-                    $image = new Image();
-
-                    $imageName = uniqid().$form['image'.$i]->getData()->getClientOriginalName();
-                    $image
-                        ->setName($imageName)
-                        ->setFigure($figure)
-                        ->setFirst($i == 1);
-
-                    $entityManager->persist($image);
-
-                    /** @var  $file File */
-                    $file = $form['image'.$i]->getData();
-                    $file->move('images',$imageName);
-                }
-            }
-
-            for ($n=1;$n<=TrickFormType::NB_VIDEO;$n++) {
-                if (isset($form['video'.$n]) &&  !empty($form['video'.$n]->getData())) {
-                    $video = new Video();
-                    $linkArray=preg_split('#/#',$form['video'.$n]->getData());
-                    $linkCode = $linkArray[3];
-                    $video
-                        ->setFigure($figure)
-                        ->setLink('https://www.youtube.com/embed/'.$linkCode);
-
-                    $entityManager->persist($video);
-                }
-
-            }
+            $figure = $entityCreator->createFigure($form, $entityManager);
+            $entityCreator->createImages($form, $figure, $entityManager);
+            $entityCreator->createVideos($form,$figure, $entityManager);
             $entityManager->flush();
+
             $this->addFlash("success","Yes!!! Votre trick à bien été ajouté!! ❄❄❄");
             return $this->redirectToRoute('app_homepage');
         }
@@ -97,6 +64,7 @@ class AdminTricksController extends AbstractController
      */
     public function deleteTrick(Figure $figure, ImageRepository $imageRepository, $id, EntityManagerInterface $entityManager, VideoRepository $videoRepository, FigureRepository $figureRepository,MessageRepository $messageRepository)
     {
+//        todo: delete file
         $imageRepository->deletePicsFromTrick($id);
         $videoRepository->deleteVideosFromTrick($id);
         $messageRepository->deleteMessagesFromTrick($id);
