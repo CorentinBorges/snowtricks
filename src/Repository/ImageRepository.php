@@ -7,6 +7,7 @@ use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @method Image|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,11 +22,13 @@ class ImageRepository extends BaseRepository
         parent::__construct($registry, Image::class,$entityManager);
     }
 
-    public function deletePicsFromTrick($trickId)
+    public function deletePicsFromTrick($trickId,Filesystem $filesystem)
     {
         $tricksPics = $this->findBy(["figure" => $trickId]);
-        foreach ($tricksPics as $tricksPic) {
-            $this->entityManager->remove($tricksPic);
+        foreach ($tricksPics as $trickPic) {
+
+            $filesystem->remove('images/'.$trickPic->getName());
+            $this->entityManager->remove($trickPic);
         }
     }
     // /**

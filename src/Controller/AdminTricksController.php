@@ -14,6 +14,7 @@ use App\Service\EntityObjectCreator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,10 +63,10 @@ class AdminTricksController extends AbstractController
      * @param MessageRepository $messageRepository
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteTrick(Figure $figure, ImageRepository $imageRepository, $id, EntityManagerInterface $entityManager, VideoRepository $videoRepository, FigureRepository $figureRepository,MessageRepository $messageRepository)
+    public function deleteTrick(Figure $figure, ImageRepository $imageRepository, $id, EntityManagerInterface $entityManager, VideoRepository $videoRepository, FigureRepository $figureRepository,MessageRepository $messageRepository,Filesystem $filesystem)
     {
 //        todo: delete file
-        $imageRepository->deletePicsFromTrick($id);
+        $imageRepository->deletePicsFromTrick($id, $filesystem);
         $videoRepository->deleteVideosFromTrick($id);
         $messageRepository->deleteMessagesFromTrick($id);
         $figureRepository->deleteTrick($id);
