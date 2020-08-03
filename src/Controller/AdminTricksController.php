@@ -36,7 +36,7 @@ class AdminTricksController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $figure = $entityCreator->createFigure($form, $entityManager);
+            $figure = $entityCreator->createOrEditFigure($form, $entityManager,true);
             $entityCreator->createImages($form, $figure, $entityManager);
             $entityCreator->createVideos($form,$figure, $entityManager);
             $entityManager->flush();
@@ -74,11 +74,20 @@ class AdminTricksController extends AbstractController
     }
 
     /**
-     * @Route("tricks/edit/{id}",name="admin_tricks_edit")
+     * @Route("tricks/edit/{id}",name="admin_tricks_edite")
      * @param Figure $figure
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editTrick(Figure $figure,FieldGenerator $fieldGenerator)
+    public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository)
+    {
+        $form = $this->createForm(TrickFormType::class,$figure);
+
+        return $this->render("admin_tricks/edit.html.twig",
+            [
+                "trickForm"=>$form->createView(),
+                "trick"=>$figure]);
+    }
+    /*public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository)
     {
 
 
@@ -87,8 +96,19 @@ class AdminTricksController extends AbstractController
         $fieldGenerator->addVideoFields($figure,$form);
 
 
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityObjectCreator->createOrEditFigure($form, $entityManager,false,$figure);
+            $entityObjectCreator->createImages($form,$figure,$entityManager);
+            $entityObjectCreator->createVideos($form,$figure,$entityManager);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_homepage');
+        }
+
+
         return $this->render("admin_tricks/edit.html.twig",
         [
-            "trickForm"=>$form->createView()]);
-    }
+            "trickForm"=>$form->createView(),
+            "trick"=>$figure]);
+    }*/
 }

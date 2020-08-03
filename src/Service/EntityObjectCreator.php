@@ -17,19 +17,24 @@ class EntityObjectCreator
     /**
      * @param FormInterface $form
      * @param EntityManagerInterface $entityManager
+     * @param bool $new
      * @return Figure
      */
-    public function createFigure(FormInterface $form, EntityManagerInterface $entityManager): Figure
+    public function createOrEditFigure(FormInterface $form, EntityManagerInterface $entityManager,bool $new,$figure=null): Figure
     {
-        $figure = new Figure();
+        if ($new) {
+            $figure = new Figure();
+        }
+
         $figure
             ->setName($form['name']->getData())
             ->setDescription($form['description']->getData())
-            ->setGroupe($form['groupe']->getData())
-            ->setCreatedAtNow();
+            ->setGroupe($form['groupe']->getData());
+        $new ? $figure->setCreatedAtNow() : $figure->setModifiedAtNow() ;
         $entityManager->persist($figure);
         return $figure;
     }
+
 
     public function createImages(FormInterface $form, Figure $figure, EntityManagerInterface $entityManager)
     {
@@ -49,6 +54,7 @@ class EntityObjectCreator
             }
         }
     }
+
 
     public function createVideos(FormInterface $form, Figure $figure,EntityManagerInterface $entityManager)
     {

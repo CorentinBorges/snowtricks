@@ -93,5 +93,6 @@ class FieldGenerator
                 $this->addVideoField($form,"video".$i,"Video ".$i." (Url youtube)",$videos[$i]);
             }
         }
+
     }
 }
