@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Figure;
+use App\Entity\Image;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -57,7 +58,9 @@ class TrickFormType extends AbstractType
 
                 $builder
                     ->add('image'.$i,FileType::class,[
-                        'label'=>'Image'.$i.$textFirst,
+                        'data_class' => Image::class,
+
+                        'label'=>'Image '.$i.$textFirst,
                         'mapped'=>false,
                         'attr'=>[
                             'accept' => "image/png, image/jpeg",

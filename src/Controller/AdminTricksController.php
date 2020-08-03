@@ -3,27 +3,26 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
-use App\Entity\Image;
-use App\Entity\Video;
+
 use App\Form\TrickFormType;
 use App\Repository\FigureRepository;
 use App\Repository\ImageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\VideoRepository;
 use App\Service\EntityObjectCreator;
+use App\Service\FieldGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\File;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AdminTricksController extends AbstractController
 {
     /**
-     * @Route("/admin/tricks/new", name="admin_tricks_new")
+     * @Route("/tricks/new", name="admin_tricks_new")
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
@@ -53,7 +52,7 @@ class AdminTricksController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}",name="admin_tricks_delete")
+     * @Route("tricks/delete/{id}",name="admin_tricks_delete")
      * @param Figure $figure
      * @param ImageRepository $imageRepository
      * @param $id
@@ -65,7 +64,6 @@ class AdminTricksController extends AbstractController
      */
     public function deleteTrick(Figure $figure, ImageRepository $imageRepository, $id, EntityManagerInterface $entityManager, VideoRepository $videoRepository, FigureRepository $figureRepository,MessageRepository $messageRepository,Filesystem $filesystem)
     {
-//        todo: delete file
         $imageRepository->deletePicsFromTrick($id, $filesystem);
         $videoRepository->deleteVideosFromTrick($id);
         $messageRepository->deleteMessagesFromTrick($id);
@@ -73,5 +71,24 @@ class AdminTricksController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success','Le trick à bien été supprimé');
         return $this->redirectToRoute('app_homepage');
+    }
+
+    /**
+     * @Route("tricks/edit/{id}",name="admin_tricks_edit")
+     * @param Figure $figure
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editTrick(Figure $figure,FieldGenerator $fieldGenerator)
+    {
+
+
+        $form = $this->createForm(TrickFormType::class,$figure);
+        $fieldGenerator->addImageFields($figure,$form);
+        $fieldGenerator->addVideoFields($figure,$form);
+
+
+        return $this->render("admin_tricks/edit.html.twig",
+        [
+            "trickForm"=>$form->createView()]);
     }
 }
