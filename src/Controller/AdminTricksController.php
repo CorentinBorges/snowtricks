@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Figure;
 
 use App\Entity\Image;
+use App\Entity\Video;
 use App\Form\ImageFormType;
 use App\Form\TrickFormType;
+use App\Repository\BaseRepository;
 use App\Repository\FigureRepository;
 use App\Repository\ImageRepository;
 use App\Repository\MessageRepository;
@@ -131,16 +133,23 @@ class AdminTricksController extends AbstractController
     /**
      * @Route("tricks/delete/image/{id}",name="admin_image_delete")
      */
-    public function deletePic(Image $image,$id, EntityManagerInterface $entityManager)
+    public function deletePic(Image $image,$id, EntityManagerInterface $entityManager,ImageRepository $imageRepository)
     {
         $trickId = $image->getFigure()->getId();
-        $entityManager->remove($image);
-        $entityManager->flush();
+        $imageRepository->deleteFromDatabase($image, $entityManager, $trickId);
         return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
     }
 
 
-   
+    /**
+     * @Route("tricks/delete/video/{id}",name="admin_video_delete")
+     */
+    public function deleteVideo(Video $video,$id,EntityManagerInterface $entityManager,VideoRepository $videoRepository)
+    {
+        $trickId = $video->getFigure()->getId();
+        $videoRepository->deleteFromDatabase($video, $entityManager, $trickId);
+        return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
+   }
 
 
 
