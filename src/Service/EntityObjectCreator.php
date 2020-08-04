@@ -9,8 +9,10 @@ use App\Entity\Image;
 use App\Entity\Video;
 use App\Form\TrickFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class EntityObjectCreator
 {
@@ -36,6 +38,19 @@ class EntityObjectCreator
     }
 
 
+    public function createImage(UploadedFile $uploadedFile,$formImageName,$figure,EntityManagerInterface $entityManager)
+    {
+        //todo: setFirst
+        $image = new Image();
+        $imageName = uniqid() . $formImageName;
+        $image->setName($imageName)
+            ->setFigure($figure)
+            ->setFirst('false');
+        $entityManager->persist($image);
+        $entityManager->flush();
+        $uploadedFile->move('images', $imageName);
+
+    }
     public function createImages(FormInterface $form, Figure $figure, EntityManagerInterface $entityManager)
     {
         for ($i=1;$i<=TrickFormType::NB_IMAGE;$i++) {
@@ -54,6 +69,8 @@ class EntityObjectCreator
             }
         }
     }
+
+
 
 
     public function createVideos(FormInterface $form, Figure $figure,EntityManagerInterface $entityManager)

@@ -4,13 +4,21 @@
     <div class="container justify-content-center mt-5">
 
         <div class="row row-cols-1 row-cols-md-12">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success container mt-3">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
+            {% endfor %}
             <div class="col mb-4">
                 <div class="card">
                     <div class="justify-content-end text-right mr-4 mb-2 mt-2">
-                        <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
+                        <button class="pr-3" data-toggle="modal" data-target="{{ "editFirst" }}"><i class="fas fa-pencil-alt"></i></button>
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
-
+{#todo: image first form#}
                         <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content ">
@@ -44,16 +52,67 @@
                         <div class="row justify-content-start" >
                             {% if trick.images is not null %}
                                 {% for image in trick.images %}
+                                    {% set form= imageForm.createView %}
                                     <div class="col-sm-4 col-12 mt-3">
                                         <a  href="{{ asset('images/' ~ image.name) }}" target="_blank" class="  ">
                                             <img class="col-sm-12" src="{{ asset('images/' ~ image.name) }}" alt="snow">
                                         </a></br>
                                         <div class="col-12 col-sm-12 justify-content-right text-right">
-                                            <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
+                                            <button class="pr-3 btn btn-primary" data-toggle="modal" data-target="{{ "#edit" ~ image.id }}"><i class="fas fa-pencil-alt"></i></button>
                                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+
+                                        <div class="modal fade" id="{{ "edit" ~ image.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content ">
+
+                                                    <div class="modal-body justify-content-start text-left">
+                                                        {% set imageId=image.id %}
+                                                        {{ form_start(form) }}
+                                                            {{ form_row(form.image) }}
+                                                            {{ form_row(form.idImage, {"value" : imageId })}}
+                                                            <button type="submit" class="btn btn-success " >Envoyer</button>
+                                                        {{ form_end(form) }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
+
+                                {% endfor %}
+                            {% endif %}
+
+
+                            {% set nbRest = nbImages-trick.images|length %}
+                            {% if nbRest>0 %}
+                                {% for nb in 1..nbRest %}
+                                    {% set form= imageForm.createView %}
+                                    <div class="col-sm-4 col-12 mt-3">
+                                        <a  href="{{ asset('images/trick1.jpg') }}" target="_blank" class="  ">
+                                            <img class="col-sm-12" src="{{ asset('images/emptyImage.png') }}" alt="snow">
+                                        </a></br>
+                                        <div class="col-12 col-sm-12 justify-content-right text-right">
+                                            <button class="pr-3 btn btn-primary" data-toggle="modal" data-target="{{ "#edit" ~ nb }}"><i class="fas fa-pencil-alt"></i></button>
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+
+                                        <div class="modal fade" id="{{ "edit" ~ nb }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content ">
+
+                                                    <div class="modal-body justify-content-start text-left">
+
+                                                        {{ form_start(form) }}
+                                                        {{ form_row(form.image) }}
+                                                        {{ form_row(form.idImage)}}
+                                                        <button type="submit" class="btn btn-success " >Envoyer</button>
+                                                        {{ form_end(form) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 {% endfor %}
                             {% endif %}
 
@@ -66,6 +125,20 @@
                                     </div>
                                 </div>
                             {% endfor %}
+                            {% set nbRest = nbVideos-trick.videos|length %}
+                            {% if nbRest>0 %}
+                                {% for nb in 1..nbRest %}
+                                    <div class="col-sm-4 col-12 mt-3">
+                                        <a  href="{{ asset('images/trick1.jpg') }}" target="_blank" class="  ">
+                                            <img class="col-sm-12" src="{{ asset('images/emptyVideo.png') }}" alt="snow">
+                                        </a></br>
+                                        <div class="col-12 col-sm-12 justify-content-right text-right">
+                                            <a class="pr-3" href="index.html.twig"><i class="fas fa-pencil-alt"></i></a>
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
 
                         </div>
 
@@ -75,17 +148,25 @@
                             <li><span class="text-dark">Category:</span>  {{ trick.groupe }}</li>
                         </ul>
 
-                        {{ form_start(trickForm) }}
-                        {{ form_row(trickForm.description) }}
-                        {{ form_row(trickForm.groupe) }}
 
-                        <button type="button" class="pr-3 btn btn-success" href="index.html.twig">Enregistrer</button>
-                        <button type="button" class="btn btn-danger text-right " data-toggle="modal" data-target="#delete">Supprimer</button>
+
+                        {{ form_start(trickForm) }}
+                            {{ form_row(trickForm.name) }}
+                            {{ form_row(trickForm.description) }}
+                            {{ form_row(trickForm.groupe) }}
+
+
+                            <button type="submit" class="pr-3 btn btn-success" >Enregistrer</button>
+                            <button type="button" class="btn btn-danger text-right " data-toggle="modal" data-target="#delete">Supprimer</button>
+
+                        {{ form_end(trickForm) }}
+
+
                         <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content ">
                                     <div class="modal-header">
-                                        <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer l'image</h5>
+                                        <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer le trick?</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -107,7 +188,7 @@
     </div>
 
 {% endblock %}
-
+{#todo: add js pour pre fill form#}
 {% block title %}{{ trick.name }}{% endblock %}
 
 

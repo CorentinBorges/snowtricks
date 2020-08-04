@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Figure;
 
+use App\Entity\Image;
+use App\Form\ImageFormType;
 use App\Form\TrickFormType;
 use App\Repository\FigureRepository;
 use App\Repository\ImageRepository;
@@ -45,6 +47,7 @@ class AdminTricksController extends AbstractController
             return $this->redirectToRoute('app_homepage');
         }
 
+
         return $this->render('admin_tricks/new.html.twig', [
             'trickForm' => $form->createView(),
 
@@ -74,19 +77,69 @@ class AdminTricksController extends AbstractController
     }
 
     /**
-     * @Route("tricks/edit/{id}",name="admin_tricks_edite")
+     * @Route("tricks/edit/{id}",name="admin_tricks_edit")
      * @param Figure $figure
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository)
+    public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem)
     {
-        $form = $this->createForm(TrickFormType::class,$figure);
+        $form = $this->createForm(TrickFormType::class,$figure,["is_edit"=>true]);
+        $imageForm = $this->createForm(ImageFormType::class);
+
+        $imageForm->handleRequest($request);
+        if ($imageForm->isSubmitted() && $imageForm->isValid()) {
+//            dd($imageForm["image"]->getData());
+            $newImageName=uniqid() . $imageForm["image"]->getData()->getClientOriginalName();
+            $uploadedFile = $imageForm["image"]->getData();
+            if (!empty($imageForm["idImage"]->getData())) {
+                $image = $imageRepository->findOneBy(["id" => $imageForm["idImage"]->getData()]);
+                $filesystem->remove("images/".$image->getName());
+                $image->setName($newImageName);
+                $entityManager->flush();
+                $imageForm["image"]->getData()->move('images', $newImageName);
+                $this->addFlash('success',"L'image été modifiée!");
+            }
+            else {
+
+                $entityObjectCreator->createImage($uploadedFile,$newImageName,$figure,$entityManager);
+            }
+
+
+        }
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $figure = $form->getData();
+            $entityManager->persist($figure);
+            $entityManager->flush();
+            $this->addFlash('success',"Le trick à été modifié!");
+            return $this->redirectToRoute("app_homepage");
+        }
+
+        $nbImages = TrickFormType::NB_IMAGE;
+        $nbVideos = TrickFormType::NB_VIDEO;
 
         return $this->render("admin_tricks/edit.html.twig",
             [
                 "trickForm"=>$form->createView(),
-                "trick"=>$figure]);
+                "imageForm" => $imageForm,
+                "nbImages" => $nbImages,
+                "nbVideos" => $nbVideos,
+                "trick" => $figure,]);
     }
+
+    /**
+     * @Route("tricks/edit/image/{id}/{new=false}",name="admin_edit_image")
+     */
+    public function editImage(Image $image,$id,$new,ImageRepository $imageRepository)
+    {
+        if ($new==false) {
+            $image->setName();
+        }
+        return $this->redirectToRoute('admin_tricks_delete');
+    }
+
+
     /*public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository)
     {
 
