@@ -59,7 +59,27 @@
                                         </a></br>
                                         <div class="col-12 col-sm-12 justify-content-right text-right">
                                             <button class="pr-3 btn btn-primary" data-toggle="modal" data-target="{{ "#edit" ~ image.id }}"><i class="fas fa-pencil-alt"></i></button>
-                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
+
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="{{"#delete" ~ image.id }}"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                        <div class="modal fade" id="{{"delete" ~ image.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content ">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-danger" id="exampleModalLabel">Suppression d'image</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body justify-content-start text-left">
+                                                        ⚠ Voulez vous vraiment supprimer cette image?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                        <button type="button" class="btn btn-danger"><a class="del_button" href="{{ path('admin_image_delete', {id: image.id }) }}">Supprimer</a></button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="modal fade" id="{{ "edit" ~ image.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -77,6 +97,8 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
                                     </div>
 
 
@@ -89,13 +111,10 @@
                                 {% for nb in 1..nbRest %}
                                     {% set form= imageForm.createView %}
                                     <div class="col-sm-4 col-12 mt-3">
-                                        <a  href="{{ asset('images/trick1.jpg') }}" target="_blank" class="  ">
+                                        <button data-toggle="modal" data-target="{{ "#edit" ~ nb }}" >
                                             <img class="col-sm-12" src="{{ asset('images/emptyImage.png') }}" alt="snow">
-                                        </a></br>
-                                        <div class="col-12 col-sm-12 justify-content-right text-right">
-                                            <button class="pr-3 btn btn-primary" data-toggle="modal" data-target="{{ "#edit" ~ nb }}"><i class="fas fa-pencil-alt"></i></button>
-                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete"><i class="far fa-trash-alt"></i></button>
-                                        </div>
+                                        </button></br>
+
 
                                         <div class="modal fade" id="{{ "edit" ~ nb }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">

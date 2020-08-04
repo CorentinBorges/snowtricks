@@ -102,8 +102,8 @@ class AdminTricksController extends AbstractController
             else {
 
                 $entityObjectCreator->createImage($uploadedFile,$newImageName,$figure,$entityManager);
+                return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
             }
-
 
         }
 
@@ -129,15 +129,20 @@ class AdminTricksController extends AbstractController
     }
 
     /**
-     * @Route("tricks/edit/image/{id}/{new=false}",name="admin_edit_image")
+     * @Route("tricks/delete/image/{id}",name="admin_image_delete")
      */
-    public function editImage(Image $image,$id,$new,ImageRepository $imageRepository)
+    public function deletePic(Image $image,$id, EntityManagerInterface $entityManager)
     {
-        if ($new==false) {
-            $image->setName();
-        }
-        return $this->redirectToRoute('admin_tricks_delete');
+        $trickId = $image->getFigure()->getId();
+        $entityManager->remove($image);
+        $entityManager->flush();
+        return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
     }
+
+
+   
+
+
 
 
     /*public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository)
