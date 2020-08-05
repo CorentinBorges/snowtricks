@@ -23,10 +23,11 @@ abstract class BaseRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
-    public function deleteFromDatabase($entity, EntityManagerInterface $entityManager,$joinId=null)
+    public function deleteFromDatabase($entity)
     {
-        $trickId = $joinId;
-        $entityManager->remove($entity);
-        $entityManager->flush();
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
     }
+
+
 }

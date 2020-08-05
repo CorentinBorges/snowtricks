@@ -30,7 +30,6 @@ class TricksController extends AbstractController
      */
     public function show(Figure $figure)
     {
-        //Todo: afficher une image par défaut si elle n'existe pas
         return $this->render("tricks/show.html.twig",[
             'trick'=> $figure,
 

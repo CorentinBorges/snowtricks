@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Figure;
 use App\Entity\Video;
+use App\Form\TrickFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * @method Video|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +17,48 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class VideoRepository extends BaseRepository
 {
+    const YOUTUBE_LINK = "https://www.youtube.com/embed/";
+
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, Video::class,$entityManager);
+    }
+
+    public function createVideo($figure,$link)
+    {
+        $video = new Video();
+        $linkArray = preg_split('#/#', $link);
+        $linkCode = $linkArray[3];
+        $video
+            ->setFigure($figure)
+            ->setLink(self::YOUTUBE_LINK.$linkCode);
+        $this->entityManager->persist($video);
+        $this->entityManager->flush();
+    }
+
+    public function createVideos(FormInterface $form, Figure $figure)
+    {
+        for ($n=1;$n<=TrickFormType::NB_VIDEO;$n++) {
+            if (isset($form['video'.$n]) &&  !empty($form['video'.$n]->getData())) {
+                $video = new Video();
+                $linkArray=preg_split('#/#',$form['video'.$n]->getData());
+                $linkCode = $linkArray[3];
+                $video
+                    ->setFigure($figure)
+                    ->setLink(self::YOUTUBE_LINK.$linkCode);
+
+                $this->entityManager->persist($video);
+            }
+        }
+    }
+
+    public function editVideo(int $id,string $link)
+    {
+        $video = $this->findOneBy(["id" => $id]);
+        $finalLink = $this->createLink($link);
+        $video->setLink($finalLink);
+        $this->entityManager->persist($video);
+        $this->entityManager->flush();
     }
 
     public function deleteVideosFromTrick($trickId)
@@ -25,6 +67,13 @@ class VideoRepository extends BaseRepository
         foreach ($tricksVideos as $tricksVideo) {
             $this->entityManager->remove($tricksVideo);
         }
+    }
+
+    public function createLink($link)
+    {
+        $linkArray=preg_split('#/#',$link);
+        $linkCode = $linkArray[3];
+        return self::YOUTUBE_LINK . $linkCode;
     }
 
     // /**

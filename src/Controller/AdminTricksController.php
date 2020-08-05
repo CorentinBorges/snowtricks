@@ -8,6 +8,7 @@ use App\Entity\Image;
 use App\Entity\Video;
 use App\Form\ImageFormType;
 use App\Form\TrickFormType;
+use App\Form\VideoFormType;
 use App\Repository\BaseRepository;
 use App\Repository\FigureRepository;
 use App\Repository\ImageRepository;
@@ -33,22 +34,24 @@ class AdminTricksController extends AbstractController
      * @param EntityObjectCreator $entityCreator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function add(Request $request, EntityManagerInterface $entityManager, EntityObjectCreator $entityCreator)
+    public function add(Request $request, EntityManagerInterface $entityManager,ImageRepository $imageRepository, VideoRepository $videoRepository, FigureRepository $figureRepository)
     {
         $form = $this->createForm(TrickFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $name = $form['name']->getData();
+            $description = $form['description']->getData();
+            $groupe = $form['groupe']->getData();
 
-            $figure = $entityCreator->createOrEditFigure($form, $entityManager,true);
-            $entityCreator->createImages($form, $figure, $entityManager);
-            $entityCreator->createVideos($form,$figure, $entityManager);
+            $figure = $figureRepository->createFigure($name,$description,$groupe);
+            $imageRepository->createImages($form, $figure);
+            $videoRepository->createVideos($form,$figure);
             $entityManager->flush();
 
             $this->addFlash("success","Yes!!! Votre trick à bien été ajouté!! ❄❄❄");
             return $this->redirectToRoute('app_homepage');
         }
-
 
         return $this->render('admin_tricks/new.html.twig', [
             'trickForm' => $form->createView(),
@@ -83,37 +86,52 @@ class AdminTricksController extends AbstractController
      * @param Figure $figure
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem)
+    public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem,VideoRepository $videoRepository)
     {
         $form = $this->createForm(TrickFormType::class,$figure,["is_edit"=>true]);
         $imageForm = $this->createForm(ImageFormType::class);
+        $videoForm = $this->createForm(VideoFormType::class);
 
         $imageForm->handleRequest($request);
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-//            dd($imageForm["image"]->getData());
+
             $newImageName=uniqid() . $imageForm["image"]->getData()->getClientOriginalName();
             $uploadedFile = $imageForm["image"]->getData();
+
             if (!empty($imageForm["idImage"]->getData())) {
-                $image = $imageRepository->findOneBy(["id" => $imageForm["idImage"]->getData()]);
-                $filesystem->remove("images/".$image->getName());
-                $image->setName($newImageName);
-                $entityManager->flush();
-                $imageForm["image"]->getData()->move('images', $newImageName);
+                $imageRepository->editImage($imageForm['idImage']->getData(), $newImageName, $imageForm['image']->getData());
                 $this->addFlash('success',"L'image été modifiée!");
             }
-            else {
 
-                $entityObjectCreator->createImage($uploadedFile,$newImageName,$figure,$entityManager);
-                return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
+            $imageRepository->createImage($uploadedFile,$newImageName,$figure);
+            $figure->setModifiedAtNow();
+            $entityManager->flush();
+            return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
+        }
+
+        $videoForm->handleRequest($request);
+        if ($videoForm->isSubmitted() && $videoForm->isValid()) {
+
+            if (!empty($videoForm['id']->getData())) {
+                $videoRepository->editVideo($videoForm['id']->getData(),$videoForm['link']->getData());
+                $this->addFlash("success","La vidéo à été modifiée");
+
             }
 
+            $videoRepository->createVideo($figure,$videoForm['link']->getData());
+            $figure->setModifiedAtNow();
+            $entityManager->flush();
+            $this->addFlash('success',"Votre vidéo à été ajoutée");
+            return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
         }
 
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $figure = $form->getData();
             $entityManager->persist($figure);
+            $figure->setModifiedAtNow();
             $entityManager->flush();
+
             $this->addFlash('success',"Le trick à été modifié!");
             return $this->redirectToRoute("app_homepage");
         }
@@ -125,6 +143,7 @@ class AdminTricksController extends AbstractController
             [
                 "trickForm"=>$form->createView(),
                 "imageForm" => $imageForm,
+                "videoForm" => $videoForm,
                 "nbImages" => $nbImages,
                 "nbVideos" => $nbVideos,
                 "trick" => $figure,]);
@@ -136,7 +155,8 @@ class AdminTricksController extends AbstractController
     public function deletePic(Image $image,$id, EntityManagerInterface $entityManager,ImageRepository $imageRepository)
     {
         $trickId = $image->getFigure()->getId();
-        $imageRepository->deleteFromDatabase($image, $entityManager, $trickId);
+        $imageRepository->deleteFromDatabase($image);
+        $this->addFlash("success","L'image a été supprimée");
         return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
     }
 
@@ -144,10 +164,11 @@ class AdminTricksController extends AbstractController
     /**
      * @Route("tricks/delete/video/{id}",name="admin_video_delete")
      */
-    public function deleteVideo(Video $video,$id,EntityManagerInterface $entityManager,VideoRepository $videoRepository)
+    public function deleteVideo(Video $video,VideoRepository $videoRepository)
     {
         $trickId = $video->getFigure()->getId();
-        $videoRepository->deleteFromDatabase($video, $entityManager, $trickId);
+        $videoRepository->deleteFromDatabase($video);
+        $this->addFlash("success","La vidéo a été supprimée");
         return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
    }
 
