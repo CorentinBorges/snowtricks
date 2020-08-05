@@ -57,6 +57,12 @@
                 {% for message in trick.messages %}
                     <li class="list-group-item">
                         <div class="media">
+                            {% if user.avatarPath is defined %}
+                                <img src="{{ asset('images/avatars/' ~ message.user.avatarPath) }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
+                            {% else %}
+                                <img src="{{ asset('images/avatars/face.jpg') }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
+                            {% endif %}
+
                             <img src="{{ asset('images/avatars/' ~ message.user.avatarPath) }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
                             <div class="media-body">
                                 <h5 class="mt-0">{{ message.user.username }}</h5>

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace administration{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="card mt-5 ">
+            <div class="container pl-5 pr-5">
+                <div class="row mt-5 mb-5">
+                    <div class="col-2 justify-content-end text-right">
+                        {% if user.avatarPath is defined %}
+                            <img class="col-12" src="{{ asset('images/avatars/' ~ user.avatarPath) }}"/>
+                        {% else %}
+                            <img class="col-12" src="{{ asset('images/avatars/face.jpg') }}"/>
+                        {% endif %}
+                        <button class="pr-3 mr-3 btn btn-primary justify-content-end" data-toggle="modal" data-target="#editPic"><i class="fas fa-pencil-alt"></i></button>
+
+                        <div class="modal fade" id="editPic" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content ">
+
+                                    <div class="modal-body justify-content-start text-left">
+                                        {{ form_start(imageForm) }}
+                                            {{ form_widget(imageForm) }}
+
+                                            <button class="btn btn-lg btn-primary mt-5" type="submit">Envoyer</button>
+                                        {{ form_end(imageForm) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="col-8">Bonjour {{ user.username }}!</h3>
+                </div>
+
+                <form method="post">
+                    {% for message in app.flashes('error') %}
+                        <div class=" text-danger mt-3">
+                            <p><span class="erreur_logo">Erreur</span> {{ message }}</p>
+                        </div>
+
+                    {% endfor %}
+                    <label for="inputUsername">Nom d'utilisateur</label>
+                    <input type="text" value="{{ user.username }}" name="username" id="inputUsername" class="form-control" required autofocus>
+                    <label for="email">Mail</label>
+                    <input type="email" value="{{ user.email }}" name="email" id="email" class="form-control" required>
+
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+
+                    <button class="btn btn-lg btn-primary mt-5 mb-5" type="submit">
+                        Enregistrer les modifications
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/loadedFilesDisplayed.js') }}"></script>
+{% endblock %}
