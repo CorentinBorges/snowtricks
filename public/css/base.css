@@ -34,7 +34,16 @@ h3 {
 .del_button:hover {
     color: white;
     text-decoration: none;
+}
 
+.erreur_logo {
+    background: orangered;
+    border-radius: 5px;
+    margin-right: 5px;
+    color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight: 700;
 }
 
 /*****nav******/
@@ -132,5 +141,17 @@ nav .navbar-nav li a{
 .custom-file-label::after {
     content: "Charger";
 }
+
+/******login****/
+.login-link{
+    color: white ;
+    text-decoration: none;
+}
+
+.login-link:hover{
+    color: white ;
+    text-decoration: none;
+}
+
 
 

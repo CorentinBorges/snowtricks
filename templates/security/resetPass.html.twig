@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Mot de passe oublié
+{% endblock %}
+
+{% block body %}
+
+
+    <h2 class="text-center mt-5"> Réinitialiser mot de passe</h2>
+    <div class="container justify-content-center mt-5 ">
+        <form method="POST" class="">
+            <label>Nom d'utilisateur</label>
+            {% for message in app.flashes('error') %}
+                <div class=" text-danger mt-3">
+                    <p><span class="erreur_logo">Erreur</span> {{ message }}</p>
+                </div>
+
+            {% endfor %}
+            <input type="text" name="username" class="form-control " required>
+            <button class="btn btn-lg btn-primary mt-5" type="submit">
+                Envoyer
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
