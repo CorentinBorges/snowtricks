@@ -4,12 +4,17 @@
 namespace App\Service;
 
 
+use http\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
 class MailSender
 {
+    const FROM = 'cb.corentinborges@gmail.com';
+    const CONFIRM_SIGN_IN=0;
+    const RESET_PASS = 1;
+
 
 
     /**
@@ -28,19 +33,40 @@ class MailSender
         $this->request = $request;
     }
 
-    public function sendConfirmationMail(string $from, string $to,string $tokenName)
+
+
+
+    public function sendMail(string $to,string $tokenName,int $messageType)
     {
-        $email = (new Email())
-            ->from($from)
-            ->to($to)
-            ->subject("Snowtricks: Confirmation par mail")
-            ->text('Mail de confirmation')
-            ->html('
+        if ($messageType==self::CONFIRM_SIGN_IN) {
+            $message = '
                     <h1>Confirmation d\'inscription snowtricks</h1>
                     <p>Veuillez confirmer votre inscription en cliquant sur 
-                    <a href="https://'.$this->request->server->get('HTTP_HOST').'/confirmation/'.$tokenName.'"> Ce lien</a>
+                    <a href="https://' . $this->request->server->get('HTTP_HOST') . '/confirmation/' . $tokenName . '"> Ce lien</a>
                     </p> <br>
-                    <strong>⚠️ Le lien n\'est actif que 5 jours</strong>');
+                    <strong>⚠️ Le lien n\'est actif que 5 jours</strong>';
+            $subject = "Snowtricks: Confirmation d'inscription";
+        }
+        else if ($messageType===self::RESET_PASS) {
+            $message = '
+                    <h1>Renouveler son mot de passe snowtricks</h1>
+                    <p>Pour réinitialiser votre mot de passe, veuillez cliquer sur 
+                    <a href="https://' . $this->request->server->get('HTTP_HOST') . '/newPass/' . $tokenName . '"> Ce lien</a>
+                    </p> <br>
+                    <strong>⚠️ Le lien n\'est actif que 5 jours</strong>';
+            $subject = "Snowtricks: Réinitialisation du mot de passe";
+
+        }
+        else{
+            throw new \InvalidArgumentException("Message type has to be one of the MailSender constante");
+        }
+
+    $email = (new Email())
+            ->from(self::FROM)
+            ->to($to)
+            ->subject($subject)
+            ->text('Mail de confirmation')
+            ->html($message);
 
         $this->mailer->send($email);
     }
