@@ -173,30 +173,4 @@ class AdminTricksController extends AbstractController
    }
 
 
-
-
-    /*public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository)
-    {
-
-
-        $form = $this->createForm(TrickFormType::class,$figure);
-        $fieldGenerator->addImageFields($figure,$form);
-        $fieldGenerator->addVideoFields($figure,$form);
-
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityObjectCreator->createOrEditFigure($form, $entityManager,false,$figure);
-            $entityObjectCreator->createImages($form,$figure,$entityManager);
-            $entityObjectCreator->createVideos($form,$figure,$entityManager);
-            $entityManager->flush();
-            return $this->redirectToRoute('app_homepage');
-        }
-
-
-        return $this->render("admin_tricks/edit.html.twig",
-        [
-            "trickForm"=>$form->createView(),
-            "trick"=>$figure]);
-    }*/
 }
