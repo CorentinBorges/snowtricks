@@ -4,7 +4,11 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -17,9 +21,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $manager;
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager, Filesystem $filesystem)
     {
         parent::__construct($registry, User::class);
+        $this->manager = $manager;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -34,6 +49,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function editUser(User $user,Request $request)
+    {
+        $user->setUsername($request->request->get('username'));
+        $user->setEmail($request->request->get('email'));
+        $this->manager->persist($user);
+        $this->manager->flush();
+    }
+
+    public function editAvatar(UploadedFile $image,User $user)
+    {
+        if ($user->getAvatarPath()) {
+            $this->filesystem->remove('images/avatars/'.$user->getAvatarPath());
+        }
+        $imageName=uniqid().$image->getClientOriginalName();
+        $image->move('images/avatars', $imageName);
+        $user->setAvatarPath($imageName);
+        $this->manager->persist($user);
+        $this->manager->flush();
     }
 
     // /**
