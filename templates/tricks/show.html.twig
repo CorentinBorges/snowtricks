@@ -44,17 +44,15 @@
         </div>
 
         {% if is_granted('ROLE_ADMIN') %}
-            <div class="card" >
-                <form class="pt-2 pb-2 justify-content-center text-center">
-                    <div class="form-group container">
-                        <label for="comment"> Laisser un commentaire</label>
-                        <textarea id="comment" class="form-control" rows="2" name="comment" cols="25"></textarea>
-                    </div>
-                </form>
+            <div class="card text-center container mb-5" >
+                {{ form_start(commentForm) }}
+                    {{ form_widget(commentForm) }}
+                <button type="submit" class="btn btn-primary text-center mb-4">Envoyer le commentaire</button>
+                {{ form_end(commentForm) }}
             </div>
         {% endif %}
 
-        <div class="card" >
+        <div class="card mb-5" >
             <ul class="list-group list-group-flush">
                 {% for message in trick.messages %}
                     <li class="list-group-item">

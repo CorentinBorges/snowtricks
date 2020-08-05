@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
@@ -19,6 +20,8 @@ class Message
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(max="250", maxMessage="Le commentaire ne doit pas dépasser 250 caractères")
+     * @Assert\NotBlank(message="Votre commentaire est vide")
      */
     private $content;
 
@@ -90,5 +93,11 @@ class Message
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public function setCreatedAtNow()
+    {
+        $now = new \DateTime("now");
+        $this->setCreatedAt($now);
     }
 }
