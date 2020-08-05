@@ -3,10 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Figure;
+use App\Entity\Image;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,6 +24,8 @@ class TrickFormType extends AbstractType
     const NB_VIDEO = 3;
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $hideFieldTypeImage = $options['is_edit'] ? HiddenType::class : FileType::class;
+        $hideFieldTypeVideo = $options['is_edit'] ? HiddenType::class : TextType::class;
         $builder
 
             ->add('name',TextType::class,[
@@ -56,8 +60,10 @@ class TrickFormType extends AbstractType
                 $textFirst = ($i == 1) ? " (image mise en avant)" : "";
 
                 $builder
-                    ->add('image'.$i,FileType::class,[
-                        'label'=>'Image'.$i.$textFirst,
+                    ->add('image'.$i,$hideFieldTypeImage,[
+                        'data_class' => Image::class,
+
+                        'label'=>'Image '.$i.$textFirst,
                         'mapped'=>false,
                         'attr'=>[
                             'accept' => "image/png, image/jpeg",
@@ -78,7 +84,7 @@ class TrickFormType extends AbstractType
 
         for ($n=1;$n<=self::NB_VIDEO; $n++) {
             $builder
-                ->add('video'.$n,TextType::class,[
+                ->add('video'.$n,$hideFieldTypeVideo,[
                     'label'=>'Vidéo '.$n.' (Url Youtube)',
                     'required'=>false,
                     'mapped'=>false,
@@ -101,6 +107,9 @@ class TrickFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Figure::class,
+            'is_edit' => false,
         ]);
+
+        $resolver->setAllowedTypes('is_edit', "bool");
     }
 }

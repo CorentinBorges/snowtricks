@@ -247,4 +247,10 @@ class Figure
         $now = new \DateTime("now");
         $this->setCreatedAt($now);
     }
+
+    public function setModifiedAtNow()
+    {
+        $now = new \DateTime("now");
+        $this->setModifiedAt($now);
+    }
 }

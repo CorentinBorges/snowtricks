@@ -7,6 +7,7 @@ use App\Entity\Image;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * @method Figure|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,11 +34,26 @@ class FigureRepository extends BaseRepository
             ->getResult();
     }
 
+    public function createFigure($name,$description,$groupe): Figure
+    {
+            $figure = new Figure();
+
+        $figure
+            ->setName($name)
+            ->setDescription($description)
+            ->setGroupe($groupe)
+            ->setCreatedAtNow();
+        $this->entityManager->persist($figure);
+        return $figure;
+    }
+
     public function deleteTrick($id)
     {
         $trick = $this->findOneBy(["id"=>$id]);
         $this->entityManager->remove($trick);
     }
+
+
 
     // /**
     //  * @return Figure[] Returns an array of Figure objects
