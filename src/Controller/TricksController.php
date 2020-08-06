@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Figure;
 use App\Entity\Image;
 use App\Entity\Message;
+use App\Entity\User;
 use App\Form\CommentFormType;
 use App\Repository\FigureRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,10 +33,11 @@ class TricksController extends AbstractController
     /**
      * @Route("/trick/{id}", name="app_show")
      */
-    public function show(Figure $figure, Request $request, EntityManagerInterface $entityManager)
+    public function show(Figure $figure, Request $request, EntityManagerInterface $entityManager,$id,MessageRepository $messageRepository)
     {
         $form = $this->createForm(CommentFormType::class);
         $form->handleRequest($request);
+        /** @var User $user */
         $user = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,14 +51,40 @@ class TricksController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
             $this->addFlash('success',"Votre commentaire à été ajouté");
+            return $this->redirectToRoute('app_show',['id'=>$id]);
         }
 
 
+        if (!empty($figure->getMessages())) {
+            $reverseMessages = $messageRepository->reverseOrder();
+        }
+        else{
+            $reverseMessages = null;
+        }
+
         return $this->render("tricks/show.html.twig",[
             'trick'=> $figure,
+            'messages'=>$reverseMessages,
             'commentForm' => $form->createView(),
 
 
+        ]);
+    }
+
+    /**
+     * @Route("/messages/{id}",name="app_messages")
+     */
+    public function messages(Figure $figure,$id, MessageRepository $messageRepository)
+    {
+        if (!empty($figure->getMessages())) {
+            $reverseMessages = $messageRepository->reverseOrder();
+        }
+        else{
+            $reverseMessages = null;
+        }
+
+        return $this->render('tricks/comments.html.twig',[
+            'messages'=>$reverseMessages
         ]);
     }
 }

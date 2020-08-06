@@ -29,6 +29,14 @@ class MessageRepository extends BaseRepository
 
     }
 
+    public function reverseOrder()
+    {
+        return $this->createQueryBuilder('m')
+            ->orderBy('m.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Message[] Returns an array of Message objects
     //  */

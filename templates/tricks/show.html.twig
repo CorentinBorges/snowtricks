@@ -31,11 +31,13 @@
                             {% endfor %}
 
                         </div>
-
+{#todo: comments ordered by#}
                         <p class="card-text mt-5">{{ trick.description }}</p>
                         <ul class="row description-list justify-content-center mt-5">
                             <li><span class="text-dark">Ajouté le:</span> {{ trick.createdAt|date('d/m/Y') }}</li>
-                            <li><span class="text-dark">Modifié le:</span> {% if trick.modifiedAt is defined%} {{ trick.modifiedAt|date('d/m/Y')}} {% endif %}</li>
+                            {% if trick.modifiedAt is not null%}
+                            <li><span class="text-dark">Modifié le:</span>  {{ trick.modifiedAt|date('d/m/Y')}} </li>
+                            {% endif %}
                             <li><span class="text-dark">Category:</span>  {{ trick.groupe }}</li>
                         </ul>
                     </div>
@@ -54,9 +56,13 @@
 
         <div class="card mb-5" >
             <ul class="list-group list-group-flush">
-                {% for message in trick.messages %}
-                    <li class="list-group-item">
-                        <div class="media">
+                {% set nbMessages = messages|length %}
+                {% set i=1 %}
+                {% set listId=1%}
+
+                {% for message in messages %}
+                    <li class="list-group-item list {{ "list" ~ listId }}">
+                        <div class="media ">
                             {% if message.user.avatarPath is defined %}
                                 <img src="{{ asset('images/avatars/' ~ message.user.avatarPath) }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
                             {% else %}
@@ -71,12 +77,63 @@
                             </div>
                         </div>
                     </li>
+                    {% set i=i+1 %}
+                    {% if i is divisible by(10) %}
+                        {% set listId=listId+1 %}
+                    {% endif %}
                 {% endfor %}
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item "><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item page" value="1"><button class="page-link" >1</button></li>
+                        <li class="page-item page" value="2"><button class="page-link" >2</button></li>
+                        <li class="page-item  page" value="3"><button class="page-link" >3</button></li>
+                        <li class="page-item"><button class="page-link" href="#">Next</button></li>
+                    </ul>
+                </nav>
 {#                TODO: boutton loadmore+ afficher nombre limité de commentaires#}
             </ul>
         </div>
     </div>
 
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        {% set nbMessages = messages|length %}
+        let nbMessages={{ nbMessages }};
+        let x=1;
+
+
+        $(".list").hide();
+        $(".list1").show();
+        $(".page").click(function (){
+
+            let page=$(this).val()
+
+            $(".list"+(x)).hide();
+            $('.list'+page).show();
+            x=page;
+
+        })
+
+
+
+        /*$(".list1").hide();
+
+        $(".page2").click(function() {
+            $(".list0").hide();
+            $('.list1').show();
+        });
+        $(".page1").click(function() {
+            $(".list1").hide();
+            $('.list0').show();
+        });*/
+
+
+
+    </script>
 {% endblock %}
 
 {% block title %}{{ trick.name }}{% endblock %}
