@@ -6,7 +6,7 @@
         <div class="row row-cols-1 row-cols-md-12">
 
             <div class="col mb-4">
-                <div class="card">
+                <div class="card card-show">
 
 
                     {% if trick.findFirst is not null %}
@@ -31,11 +31,13 @@
                             {% endfor %}
 
                         </div>
-
+{#todo: comments ordered by#}
                         <p class="card-text mt-5">{{ trick.description }}</p>
                         <ul class="row description-list justify-content-center mt-5">
                             <li><span class="text-dark">Ajouté le:</span> {{ trick.createdAt|date('d/m/Y') }}</li>
-                            <li><span class="text-dark">Modifié le:</span> {% if trick.modifiedAt is defined%} {{ trick.modifiedAt|date('d/m/Y')}} {% endif %}</li>
+                            {% if trick.modifiedAt is not null%}
+                            <li><span class="text-dark">Modifié le:</span>  {{ trick.modifiedAt|date('d/m/Y')}} </li>
+                            {% endif %}
                             <li><span class="text-dark">Category:</span>  {{ trick.groupe }}</li>
                         </ul>
                     </div>
@@ -54,16 +56,20 @@
 
         <div class="card mb-5" >
             <ul class="list-group list-group-flush">
-                {% for message in trick.messages %}
-                    <li class="list-group-item">
-                        <div class="media">
-                            {% if user.avatarPath is defined %}
+                {% set nbMessages = messages|length %}
+                {% set i=1 %}
+                {% set listId=1%}
+
+                {% for message in messages %}
+                    <li class="list-group-item list {{ "list" ~ listId }}">
+                        <div class="media ">
+                            {% if message.user.avatarPath is defined %}
                                 <img src="{{ asset('images/avatars/' ~ message.user.avatarPath) }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
                             {% else %}
                                 <img src="{{ asset('images/avatars/face.jpg') }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
                             {% endif %}
 
-                            <img src="{{ asset('images/avatars/' ~ message.user.avatarPath) }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
+
                             <div class="media-body">
                                 <h5 class="mt-0">{{ message.user.username }}</h5>
                                 <h5 class="mt-0">Posté le: {{ message.createdAt|date('d/m/Y') }} </h5>
@@ -71,11 +77,44 @@
                             </div>
                         </div>
                     </li>
+                    {% set i=i+1 %}
+                    {% if i is divisible by(10) %}
+                        {% set listId=listId+1 %}
+                    {% endif %}
                 {% endfor %}
+
+
 {#                TODO: boutton loadmore+ afficher nombre limité de commentaires#}
             </ul>
+            <nav aria-label="Page navigation example" >
+                <ul class="pagination justify-content-center">
+                    <li class="page-item previous"><button class="page-link" >Previous</button></li>
+                    {% set nbPage=1 %}
+                    {% set n=1 %}
+                    {%for message in messages %}
+                        {% if n is divisible by(10) %}
+                            {% set nbPage=nbPage+1 %}
+                        {% endif %}
+                        {% set n=n+1 %}
+                    {% endfor %}
+                    {% for page in 1..nbPage %}
+                        <li class="page-item " ><button class="page-link page page{{ page }}" value="{{ page }}">{{ page }}</button></li>
+                    {% endfor %}
+                    <li class="page-item next"><button class="page-link">Next</button></li>
+                </ul>
+            </nav>
         </div>
     </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{#    todo: Karim:Comment fair passer nbMessage de php à js pour pouvoir fair un fichier script#}
+    <script>
+        {% set nbMessages = messages|length %}
+
+        let nbMessages={{ nbMessages }};</script>
+    <script src="{{ asset('js/pagination.js') }}"></script>
 
 {% endblock %}
 

@@ -29,6 +29,23 @@ class MessageRepository extends BaseRepository
 
     }
 
+    public function reverseOrder()
+    {
+        return $this->createQueryBuilder('m')
+            ->orderBy('m.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countAll()
+    {
+        return $this->createQueryBuilder('m')
+            ->select('count(m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+    }
+
     // /**
     //  * @return Message[] Returns an array of Message objects
     //  */
