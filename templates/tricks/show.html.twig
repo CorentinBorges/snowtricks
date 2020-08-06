@@ -83,17 +83,26 @@
                     {% endif %}
                 {% endfor %}
 
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item previous"><button class="page-link" >Previous</button></li>
-                        <li class="page-item " ><button class="page-link page page1" value="1">1</button></li>
-                        <li class="page-item " ><button class="page-link page page2" value="2" >2</button></li>
-                        <li class="page-item "><button class="page-link page page3" value="3">3</button></li>
-                        <li class="page-item next"><button class="page-link" href="#">Next</button></li>
-                    </ul>
-                </nav>
+
 {#                TODO: boutton loadmore+ afficher nombre limité de commentaires#}
             </ul>
+            <nav aria-label="Page navigation example" >
+                <ul class="pagination justify-content-center">
+                    <li class="page-item previous"><button class="page-link" >Previous</button></li>
+                    {% set nbPage=1 %}
+                    {% set n=1 %}
+                    {%for message in messages %}
+                        {% if n is divisible by(10) %}
+                            {% set nbPage=nbPage+1 %}
+                        {% endif %}
+                        {% set n=n+1 %}
+                    {% endfor %}
+                    {% for page in 1..nbPage %}
+                        <li class="page-item " ><button class="page-link page page{{ page }}" value="{{ page }}">{{ page }}</button></li>
+                    {% endfor %}
+                    <li class="page-item next"><button class="page-link">Next</button></li>
+                </ul>
+            </nav>
         </div>
     </div>
 
