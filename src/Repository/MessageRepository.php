@@ -29,18 +29,22 @@ class MessageRepository extends BaseRepository
 
     }
 
-    public function reverseOrder()
+    public function reverseOrder($id)
     {
         return $this->createQueryBuilder('m')
+            ->andWhere('m.figure= :val')
+            ->setParameter('val',$id)
             ->orderBy('m.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
-    public function countAll()
+    public function count($id)
     {
         return $this->createQueryBuilder('m')
             ->select('count(m.id)')
+            ->andWhere('m.figure= :val')
+            ->setParameter('val',$id)
             ->getQuery()
             ->getSingleScalarResult();
         

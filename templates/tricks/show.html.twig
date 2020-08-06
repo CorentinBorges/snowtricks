@@ -83,9 +83,9 @@
                     {% endif %}
                 {% endfor %}
 
-
 {#                TODO: boutton loadmore+ afficher nombre limité de commentaires#}
             </ul>
+            {% if nbMessages > 0 %}
             <nav aria-label="Page navigation example" >
                 <ul class="pagination justify-content-center">
                     <li class="page-item previous"><button class="page-link" >Previous</button></li>
@@ -103,10 +103,13 @@
                     <li class="page-item next"><button class="page-link">Next</button></li>
                 </ul>
             </nav>
+            {% endif %}
         </div>
     </div>
 
 {% endblock %}
+
+
 {% block javascripts %}
     {{ parent() }}
 {#    todo: Karim:Comment fair passer nbMessage de php à js pour pouvoir fair un fichier script#}
