@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container mt-5 ml-5">
+        <h1 class="text-danger">ERREUR 404 !!!!</h1>
+        <p> Navré, cette page n'existe pas, mais restez zen  ❄️❄️❄️</p>
+    </div>
+    <div class="container col-5">
+        <img class="col-12" src="{{ asset('images/zen.jpg') }}">
+    </div>
+{% endblock %}
+{% block title %} Erreur 404 {% endblock %}
