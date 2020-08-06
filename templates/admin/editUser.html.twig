@@ -7,7 +7,7 @@
         <div class="card mt-5 ">
             <div class="container pl-5 pr-5">
                 <div class="row mt-5 mb-5">
-                    <div class="col-2 justify-content-end text-right">
+                    <div class="col-sm-2 col-12 justify-content-end text-right">
                         {% if user.avatarPath is defined %}
                             <img class="col-12" src="{{ asset('images/avatars/' ~ user.avatarPath) }}"/>
                         {% else %}
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="col-8">Bonjour {{ user.username }}!</h3>
+                    <h3 class="col-sm-8 col-12">Bonjour {{ user.username }}</h3>
                 </div>
 
                 <form method="post">
