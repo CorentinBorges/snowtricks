@@ -20,7 +20,7 @@
             $(this).addClass("page-active");
             $(".page"+x).removeClass("page-active");
             x=Number(page);
-
+            $("html, body").animate({ scrollTop: $(document).height() }, 1)
         })
 
         $(".previous").click(function (){
@@ -29,6 +29,7 @@
                 $(".list"+(x)).hide();
                 $('.list'+page).show();
                 x = page;
+                $("html, body").animate({ scrollTop: $(document).height() }, 1)
 
             }
         })
@@ -40,6 +41,7 @@
                 $(".list"+(x)).hide();
                 $('.list'+page).show();
                 x = page;
+                $("html, body").animate({ scrollTop: $(document).height() }, 1)
 
             }
         })
