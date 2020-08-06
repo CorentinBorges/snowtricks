@@ -6,7 +6,7 @@
         <div class="row row-cols-1 row-cols-md-12">
 
             <div class="col mb-4">
-                <div class="card">
+                <div class="card card-show">
 
 
                     {% if trick.findFirst is not null %}
@@ -85,11 +85,11 @@
 
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
-                        <li class="page-item "><a class="page-link" href="#">Previous</a></li>
-                        <li class="page-item page" value="1"><button class="page-link" >1</button></li>
-                        <li class="page-item page" value="2"><button class="page-link" >2</button></li>
-                        <li class="page-item  page" value="3"><button class="page-link" >3</button></li>
-                        <li class="page-item"><button class="page-link" href="#">Next</button></li>
+                        <li class="page-item previous"><button class="page-link" >Previous</button></li>
+                        <li class="page-item " ><button class="page-link page page1" value="1">1</button></li>
+                        <li class="page-item " ><button class="page-link page page2" value="2" >2</button></li>
+                        <li class="page-item "><button class="page-link page page3" value="3">3</button></li>
+                        <li class="page-item next"><button class="page-link" href="#">Next</button></li>
                     </ul>
                 </nav>
 {#                TODO: boutton loadmore+ afficher nombre limité de commentaires#}
@@ -103,19 +103,45 @@
     <script>
         {% set nbMessages = messages|length %}
         let nbMessages={{ nbMessages }};
+        let nbPage=1
+        for (i=1;i<=nbMessages;i++) {
+            if (i % 10 === 0) {
+                nbPage++
+            }
+        }
         let x=1;
 
 
         $(".list").hide();
         $(".list1").show();
+        $(".page1").addClass("page-active")
         $(".page").click(function (){
-
             let page=$(this).val()
-
             $(".list"+(x)).hide();
             $('.list'+page).show();
-            x=page;
+            $(this).addClass("page-active");
+            $(".page"+x).removeClass("page-active");
+            x=Number(page);
 
+        })
+
+        $(".previous").click(function (){
+            if (x>1) {
+                let page=x-1;
+                $(".list"+(x)).hide();
+                $('.list'+page).show();
+                x = page;
+            }
+        })
+        $(".next").click(function (){
+            if (x<nbPage) {
+
+                let page=x+1;
+                console.log(x+1);
+                $(".list"+(x)).hide();
+                $('.list'+page).show();
+                x = page;
+            }
         })
 
 

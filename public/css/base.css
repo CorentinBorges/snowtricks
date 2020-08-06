@@ -131,6 +131,19 @@ nav .navbar-nav li a{
 
 }
 
+.card-show {
+    padding: 10px;
+}
+
+.page-active{
+    background-color: #5EB5E0;
+    color: black;
+}
+
+.page:hover{
+    background-color: #5EB5E0;
+}
+
 @media all and (min-width: 576px) {
     .description-list li{
         border-right: 1px solid black;
