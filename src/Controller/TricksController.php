@@ -55,12 +55,12 @@ class TricksController extends AbstractController
             $this->addFlash('success',"Votre commentaire à été ajouté");
             return $this->redirectToRoute('app_show',['id'=>$id]);
         }
-        $nbMessage = $messageRepository->countAll();
-        file_put_contents('js/nbMessage.json', json_encode(["nbMessage"=>$nbMessage]));
+        $nbMessage = $messageRepository->count($id);
+
 
 
         if (!empty($figure->getMessages())) {
-            $reverseMessages = $messageRepository->reverseOrder();
+            $reverseMessages = $messageRepository->reverseOrder($id);
         }
         else{
             $reverseMessages = null;
@@ -69,6 +69,7 @@ class TricksController extends AbstractController
         return $this->render("tricks/show.html.twig",[
             'trick'=> $figure,
             'messages'=>$reverseMessages,
+            'nbMessages' => $nbMessage,
             'commentForm' => $form->createView(),
 
 
@@ -81,7 +82,7 @@ class TricksController extends AbstractController
     public function messages(Figure $figure,$id, MessageRepository $messageRepository)
     {
         if (!empty($figure->getMessages())) {
-            $reverseMessages = $messageRepository->reverseOrder();
+            $reverseMessages = $messageRepository->reverseOrder($id);
         }
         else{
             $reverseMessages = null;
