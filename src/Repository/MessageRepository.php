@@ -37,6 +37,15 @@ class MessageRepository extends BaseRepository
             ->getResult();
     }
 
+    public function countAll()
+    {
+        return $this->createQueryBuilder('m')
+            ->select('count(m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+    }
+
     // /**
     //  * @return Message[] Returns an array of Message objects
     //  */

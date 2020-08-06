@@ -40,6 +40,8 @@ class TricksController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             /** @var Message  $comment  */
@@ -53,6 +55,8 @@ class TricksController extends AbstractController
             $this->addFlash('success',"Votre commentaire à été ajouté");
             return $this->redirectToRoute('app_show',['id'=>$id]);
         }
+        $nbMessage = $messageRepository->countAll();
+        file_put_contents('js/nbMessage.json', json_encode(["nbMessage"=>$nbMessage]));
 
 
         if (!empty($figure->getMessages())) {

@@ -109,66 +109,13 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+{#    todo: Karim:Comment fair passer nbMessage de php à js pour pouvoir fair un fichier script#}
     <script>
         {% set nbMessages = messages|length %}
-        let nbMessages={{ nbMessages }};
-        let nbPage=1
-        for (i=1;i<=nbMessages;i++) {
-            if (i % 10 === 0) {
-                nbPage++
-            }
-        }
-        let x=1;
 
+        let nbMessages={{ nbMessages }};</script>
+    <script src="{{ asset('js/pagination.js') }}"></script>
 
-        $(".list").hide();
-        $(".list1").show();
-        $(".page1").addClass("page-active")
-        $(".page").click(function (){
-            let page=$(this).val()
-            $(".list"+(x)).hide();
-            $('.list'+page).show();
-            $(this).addClass("page-active");
-            $(".page"+x).removeClass("page-active");
-            x=Number(page);
-
-        })
-
-        $(".previous").click(function (){
-            if (x>1) {
-                let page=x-1;
-                $(".list"+(x)).hide();
-                $('.list'+page).show();
-                x = page;
-            }
-        })
-        $(".next").click(function (){
-            if (x<nbPage) {
-
-                let page=x+1;
-                console.log(x+1);
-                $(".list"+(x)).hide();
-                $('.list'+page).show();
-                x = page;
-            }
-        })
-
-
-
-        /*$(".list1").hide();
-
-        $(".page2").click(function() {
-            $(".list0").hide();
-            $('.list1').show();
-        });
-        $(".page1").click(function() {
-            $(".list1").hide();
-            $('.list0').show();
-        });*/
-
-
-
-    </script>
 {% endblock %}
 
 {% block title %}{{ trick.name }}{% endblock %}
