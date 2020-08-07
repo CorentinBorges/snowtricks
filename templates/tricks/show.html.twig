@@ -62,7 +62,7 @@
                 {% for message in messages %}
                     <li class="list-group-item list {{ "list" ~ listId }}">
                         <div class="media ">
-                            {% if message.user.avatarPath is defined %}
+                            {% if message.user.avatarPath is not null %}
                                 <img src="{{ asset('images/avatars/' ~ message.user.avatarPath) }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
                             {% else %}
                                 <img src="{{ asset('images/avatars/face.jpg') }}" class="mr-3 d-none d-sm-block col-sm-2" alt="...">
