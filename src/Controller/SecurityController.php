@@ -63,7 +63,6 @@ class SecurityController extends AbstractController
             $user = new User();
             $user
                 ->setRoles(['ROLE_ADMIN'])
-                ->setEmail($form['email']->getData())//TODO: demander à karim pourquoi setEmail($userModel['email'] ne fonctionne pas
                 ->setUsername($form['username']->getData())
                 ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
                 ->setIsValid(false);
@@ -95,7 +94,6 @@ class SecurityController extends AbstractController
      */
     public function confirmUser(Token $token,EntityManagerInterface $entityManager,Request $request)
     {
-        //todo: tester expired at le 8 aout+if token n'existe pas
         $now = new \DateTime("now");
         if ($token->getIsUsed() || $token->getExpiredAt()<$now) {
           throw new NotFoundHttpException();
@@ -159,14 +157,11 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form['email']->getData()==$user->getEmail()) {
-
                 $token->setIsUsed(true);
                 $entityManager->persist($token);
-
                 $user->setPassword($passwordEncoder->encodePassword($user, $form['password']->getData()));
                 $entityManager->persist($user);
                 $entityManager->flush();
-
                 $this->addFlash("success","Votre mot de passe à été modifié!");
                 return $this->redirectToRoute('app_homepage');
             } else {

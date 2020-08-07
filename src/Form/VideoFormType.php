@@ -26,7 +26,7 @@ class VideoFormType extends AbstractType
                     ]),
                     new Regex([
                         'pattern'=>'#^https://youtu.be/#',
-                        'message'=>'Veuillez coller un lien youtube avec : click droit->"Copier l\'URL de la video"'
+                        'message'=>'Veuillez coller un lien youtube avec : clique droit->"Copier l\'URL de la video"'
                     ])
                 ]
             ])

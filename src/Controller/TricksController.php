@@ -26,7 +26,6 @@ class TricksController extends AbstractController
         return $this->render('tricks/index.html.twig', [
             'controller_name' => 'TricksController',
             'tricks' => $tricks,
-
         ]);
     }
 
@@ -37,28 +36,18 @@ class TricksController extends AbstractController
     {
         $form = $this->createForm(CommentFormType::class);
         $form->handleRequest($request);
-        /** @var User $user */
-        $user = $this->getUser();
-
-
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            /** @var User $user */
+            $user = $this->getUser();
             /** @var Message  $comment  */
             $comment = $form->getData();
-            $comment
-                ->setFigure($figure)
-                ->setUser($user)
-                ->setCreatedAtNow();
-            $entityManager->persist($comment);
-            $entityManager->flush();
+            $messageRepository->addMessageDatabase($comment, $figure, $user);
             $this->addFlash('success',"Votre commentaire à été ajouté");
             return $this->redirectToRoute('app_show',['id'=>$id]);
         }
+
         $nbMessage = $messageRepository->count($id);
-
-
-
         if (!empty($figure->getMessages())) {
             $reverseMessages = $messageRepository->reverseOrder($id);
         }
@@ -71,25 +60,6 @@ class TricksController extends AbstractController
             'messages'=>$reverseMessages,
             'nbMessages' => $nbMessage,
             'commentForm' => $form->createView(),
-
-
-        ]);
-    }
-
-    /**
-     * @Route("/messages/{id}",name="app_messages")
-     */
-    public function messages(Figure $figure,$id, MessageRepository $messageRepository)
-    {
-        if (!empty($figure->getMessages())) {
-            $reverseMessages = $messageRepository->reverseOrder($id);
-        }
-        else{
-            $reverseMessages = null;
-        }
-
-        return $this->render('tricks/comments.html.twig',[
-            'messages'=>$reverseMessages
         ]);
     }
 }

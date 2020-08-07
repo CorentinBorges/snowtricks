@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Figure;
 use App\Entity\Message;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,7 +28,16 @@ class MessageRepository extends BaseRepository
         foreach ($messages as $message) {
             $this->entityManager->remove($message);
         }
+    }
 
+    public function addMessageDatabase(Message $comment, Figure $figure, User $user)
+    {
+        $comment
+            ->setFigure($figure)
+            ->setUser($user)
+            ->setCreatedAtNow();
+        $this->entityManager->persist($comment);
+        $this->entityManager->flush();
     }
 
     public function reverseOrder($id)

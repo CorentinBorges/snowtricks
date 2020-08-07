@@ -18,7 +18,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin_user_edit")
      */
-    public function index(Request $request, EntityManagerInterface $entityManager,CheckUserEdit $checkUserEdit,UserRepository $userRepository)
+    public function editUser(Request $request, EntityManagerInterface $entityManager, CheckUserEdit $checkUserEdit, UserRepository $userRepository)
     {
         /** @var  User $user */
         $user = $this->getUser();

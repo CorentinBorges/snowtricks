@@ -63,7 +63,7 @@ class ImageRepository extends BaseRepository
                 $this->entityManager->persist($image);
                 /** @var  $file File */
                 $file = $form['image' . $i]->getData();
-                $file->move('images', $imageName);
+                $file->move('images/tricks', $imageName);
             }
         }
     }
@@ -71,17 +71,17 @@ class ImageRepository extends BaseRepository
     public function editImage($id,$newImageName,UploadedFile $uploadedFile)
     {
         $image = $this->findOneBy(["id" => $id]);
-        $this->filesystem->remove("images/".$image->getName());
+        $this->filesystem->remove("images/tricks".$image->getName());
         $image->setName($newImageName);
         $this->entityManager->flush();
-        $uploadedFile->move('images', $newImageName);
+        $uploadedFile->move('images/tricks', $newImageName);
     }
 
     public function deletePicsFromTrick($trickId,Filesystem $filesystem)
     {
         $tricksPics = $this->findBy(["figure" => $trickId]);
         foreach ($tricksPics as $trickPic) {
-            $filesystem->remove('images/'.$trickPic->getName());
+            $filesystem->remove('images/tricks/'.$trickPic->getName());
             $this->entityManager->remove($trickPic);
         }
     }

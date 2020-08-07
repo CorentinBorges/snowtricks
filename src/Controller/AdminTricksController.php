@@ -86,7 +86,7 @@ class AdminTricksController extends AbstractController
      * @param Figure $figure
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editTrick(Figure $figure,$id,FieldGenerator $fieldGenerator,Request $request,EntityObjectCreator $entityObjectCreator,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem,VideoRepository $videoRepository)
+    public function editTrick(Figure $figure,$id,Request $request,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem,VideoRepository $videoRepository)
     {
         $form = $this->createForm(TrickFormType::class,$figure,["is_edit"=>true]);
         $imageForm = $this->createForm(ImageFormType::class);
@@ -94,15 +94,12 @@ class AdminTricksController extends AbstractController
 
         $imageForm->handleRequest($request);
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-
             $newImageName=uniqid() . $imageForm["image"]->getData()->getClientOriginalName();
             $uploadedFile = $imageForm["image"]->getData();
-
             if (!empty($imageForm["idImage"]->getData())) {
                 $imageRepository->editImage($imageForm['idImage']->getData(), $newImageName, $imageForm['image']->getData());
                 $this->addFlash('success',"L'image été modifiée!");
             }
-
             $imageRepository->createImage($uploadedFile,$newImageName,$figure);
             $figure->setModifiedAtNow();
             $entityManager->flush();
@@ -111,13 +108,10 @@ class AdminTricksController extends AbstractController
 
         $videoForm->handleRequest($request);
         if ($videoForm->isSubmitted() && $videoForm->isValid()) {
-
             if (!empty($videoForm['id']->getData())) {
                 $videoRepository->editVideo($videoForm['id']->getData(),$videoForm['link']->getData());
                 $this->addFlash("success","La vidéo à été modifiée");
-
             }
-
             $videoRepository->createVideo($figure,$videoForm['link']->getData());
             $figure->setModifiedAtNow();
             $entityManager->flush();
@@ -131,7 +125,6 @@ class AdminTricksController extends AbstractController
             $entityManager->persist($figure);
             $figure->setModifiedAtNow();
             $entityManager->flush();
-
             $this->addFlash('success',"Le trick à été modifié!");
             return $this->redirectToRoute("app_homepage");
         }

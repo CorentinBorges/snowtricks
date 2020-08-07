@@ -18,7 +18,7 @@ abstract class BaseRepository extends ServiceEntityRepository
 
      public function __construct(ManagerRegistry $registry,$class, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, $class);//todo: se passer de cette ligne? Karim
+        parent::__construct($registry, $class);
 
         $this->entityManager = $entityManager;
     }

@@ -28,11 +28,13 @@
                 let page=x-1;
                 $(".list"+(x)).hide();
                 $('.list'+page).show();
+                $(".page"+(x-1)).addClass("page-active");
+                $(".page"+x).removeClass("page-active");
                 x = page;
                 $("html, body").animate({ scrollTop: $(document).height() }, 1)
-
             }
         })
+
         $(".next").click(function (){
             if (x<nbPage) {
 
@@ -40,6 +42,8 @@
                 console.log(x+1);
                 $(".list"+(x)).hide();
                 $('.list'+page).show();
+                $(".page"+(x+1)).addClass("page-active");
+                $(".page"+x).removeClass("page-active");
                 x = page;
                 $("html, body").animate({ scrollTop: $(document).height() }, 1)
 

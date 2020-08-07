@@ -27,13 +27,13 @@
                 <div class="card">
                     <a href="{{ path('app_show', {id: trick.id}) }}">
                         {% if trick.findFirst is not null %}
-                            <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
+                            <img src="{{ asset('images/tricks/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
                         {% else %}
                             <img src="{{ asset('images/trick1.jpg') }}" class="card-img-top" alt="...">
                         {% endif %}
                     </a>
                     <div class="card-body row col-12">
-                        <h5 class="card-title col-6">{{ trick.name }}</h5>
+                        <h5 class="card-title col-6 trickName">{{ trick.name }}</h5>
                         {% if is_granted('ROLE_ADMIN') %}
                             <div class="justify-content-end col-6 text-right">
                                 <a class="pr-3" href="{{ path('admin_tricks_edit', {id: trick.id}) }}"><i class="fas fa-pencil-alt"></i></a>

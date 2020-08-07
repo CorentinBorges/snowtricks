@@ -10,7 +10,7 @@
 
 
                     {% if trick.findFirst is not null %}
-                        <img src="{{ asset('images/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
+                        <img src="{{ asset('images/tricks/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
                     {% else %}
                         <img src="{{ asset('images/trick1.jpg') }}" class="card-img-top" alt="...">
                     {% endif %}
@@ -20,8 +20,8 @@
                         <div class="row justify-content-start" >
                             {% if trick.images is not null %}
                                 {% for image in trick.images %}
-                                    <a  href="{{ asset('images/' ~ image.name) }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
-                                        <img class="col-12" src="{{ asset('images/' ~ image.name) }}" alt="snow">
+                                    <a  href="{{ asset('images/tricks/' ~ image.name) }}" target="_blank" class="col-12 col-sm-4 mt-5 ">
+                                        <img class="col-12" src="{{ asset('images/tricks/' ~ image.name) }}" alt="snow">
                                     </a>
                                 {% endfor %}
                             {% endif %}
@@ -31,7 +31,6 @@
                             {% endfor %}
 
                         </div>
-{#todo: comments ordered by#}
                         <p class="card-text mt-5">{{ trick.description }}</p>
                         <ul class="row description-list justify-content-center mt-5">
                             <li><span class="text-dark">Ajouté le:</span> {{ trick.createdAt|date('d/m/Y') }}</li>
@@ -83,7 +82,6 @@
                     {% endif %}
                 {% endfor %}
 
-{#                TODO: boutton loadmore+ afficher nombre limité de commentaires#}
             </ul>
             {% if nbMessages > 0 %}
             <nav aria-label="Page navigation example" >
@@ -112,7 +110,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-{#    todo: Karim:Comment fair passer nbMessage de php à js pour pouvoir fair un fichier script#}
     <script>
         {% set nbMessages = messages|length %}
 

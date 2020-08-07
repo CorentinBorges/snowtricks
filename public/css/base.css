@@ -4,7 +4,7 @@ body {
     color: white;
 }
 
-/*todo: responsive text*/
+
 h1{
     font-family: 'Anton', sans-serif;
     font-size: 60px;
@@ -82,9 +82,13 @@ nav .navbar-nav li a{
 #jumbo-container{
     justify-content: center;
     text-align: center;
-
 }
-/*todo: responsive text*/
+
+.trickName {
+    font-family: 'Anton', sans-serif;
+    color: #5EB5E0;
+}
+
 .home-lead{
     color: white;
     font-size: 200%;
