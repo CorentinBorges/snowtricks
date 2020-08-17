@@ -3,13 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\ChangeUserDataFormType;
 use App\Form\ImageFormType;
 use App\Repository\UserRepository;
 use App\Service\CheckUserEdit;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,7 +15,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin_user_edit")
      */
-    public function editUser(Request $request, EntityManagerInterface $entityManager, CheckUserEdit $checkUserEdit, UserRepository $userRepository)
+    public function editUser(Request $request, CheckUserEdit $checkUserEdit, UserRepository $userRepository)
     {
         /** @var  User $user */
         $user = $this->getUser();

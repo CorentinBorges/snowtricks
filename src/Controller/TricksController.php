@@ -3,13 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
-use App\Entity\Image;
 use App\Entity\Message;
 use App\Entity\User;
 use App\Form\CommentFormType;
 use App\Repository\FigureRepository;
 use App\Repository\MessageRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +18,7 @@ class TricksController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function index(FigureRepository $figureRepository,Request $request)
+    public function index(FigureRepository $figureRepository)
     {
         $tricks = $figureRepository->findAll();
         return $this->render('tricks/index.html.twig', [
@@ -32,7 +30,7 @@ class TricksController extends AbstractController
     /**
      * @Route("/trick/{id}", name="app_show")
      */
-    public function show(Figure $figure, Request $request, EntityManagerInterface $entityManager,$id,MessageRepository $messageRepository)
+    public function show(Figure $figure, Request $request,$id,MessageRepository $messageRepository)
     {
         $form = $this->createForm(CommentFormType::class);
         $form->handleRequest($request);

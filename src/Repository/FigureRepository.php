@@ -3,11 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Figure;
-use App\Entity\Image;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Form\FormInterface;
 
 /**
  * @method Figure|null find($id, $lockMode = null, $lockVersion = null)

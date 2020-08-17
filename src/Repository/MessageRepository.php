@@ -40,11 +40,11 @@ class MessageRepository extends BaseRepository
         $this->entityManager->flush();
     }
 
-    public function reverseOrder($id)
+    public function reverseOrder($figureId)
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.figure= :val')
-            ->setParameter('val',$id)
+            ->setParameter('val',$figureId)
             ->orderBy('m.createdAt', 'DESC')
             ->getQuery()
             ->getResult();

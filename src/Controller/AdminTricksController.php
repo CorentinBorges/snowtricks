@@ -9,13 +9,10 @@ use App\Entity\Video;
 use App\Form\ImageFormType;
 use App\Form\TrickFormType;
 use App\Form\VideoFormType;
-use App\Repository\BaseRepository;
 use App\Repository\FigureRepository;
 use App\Repository\ImageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\VideoRepository;
-use App\Service\EntityObjectCreator;
-use App\Service\FieldGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +28,6 @@ class AdminTricksController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
-     * @param EntityObjectCreator $entityCreator
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function add(Request $request, EntityManagerInterface $entityManager,ImageRepository $imageRepository, VideoRepository $videoRepository, FigureRepository $figureRepository)
@@ -49,7 +45,7 @@ class AdminTricksController extends AbstractController
             $videoRepository->createVideos($form,$figure);
             $entityManager->flush();
 
-            $this->addFlash("success","Yes!!! Votre trick à bien été ajouté!! ❄❄❄");
+            $this->addFlash("success","Yes !!! Votre trick à bien été ajouté !! ❄❄❄");
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -98,7 +94,7 @@ class AdminTricksController extends AbstractController
             $uploadedFile = $imageForm["image"]->getData();
             if (!empty($imageForm["idImage"]->getData())) {
                 $imageRepository->editImage($imageForm['idImage']->getData(), $newImageName, $imageForm['image']->getData());
-                $this->addFlash('success',"L'image été modifiée!");
+                $this->addFlash('success',"L'image été modifiée !");
             }
             $imageRepository->createImage($uploadedFile,$newImageName,$figure);
             $figure->setModifiedAtNow();
@@ -145,10 +141,10 @@ class AdminTricksController extends AbstractController
     /**
      * @Route("tricks/delete/image/{id}",name="admin_image_delete")
      */
-    public function deletePic(Image $image,$id, EntityManagerInterface $entityManager,ImageRepository $imageRepository)
+    public function deletePic(Image $image,$id,ImageRepository $imageRepository,Filesystem $filesystem)
     {
         $trickId = $image->getFigure()->getId();
-        $imageRepository->deleteFromDatabase($image);
+        $imageRepository->deletePic($id,$filesystem);
         $this->addFlash("success","L'image a été supprimée");
         return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
     }
