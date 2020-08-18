@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -90,38 +91,19 @@ class AdminTricksController extends AbstractController
 
         $imageForm->handleRequest($request);
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-            $newImageName=uniqid() . $imageForm["image"]->getData()->getClientOriginalName();
-            $uploadedFile = $imageForm["image"]->getData();
-            if (!empty($imageForm["idImage"]->getData())) {
-                $imageRepository->editImage($imageForm['idImage']->getData(), $newImageName, $imageForm['image']->getData());
-                $this->addFlash('success',"L'image été modifiée !");
-            }
-            $imageRepository->createImage($uploadedFile,$newImageName,$figure);
-            $figure->setModifiedAtNow();
-            $entityManager->flush();
+            $this->editImage(uniqid() . $imageForm["image"]->getData()->getClientOriginalName(), $imageForm["image"]->getData(), $imageRepository, $imageForm['idImage']->getData(), $figure, $entityManager);
             return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
         }
 
         $videoForm->handleRequest($request);
         if ($videoForm->isSubmitted() && $videoForm->isValid()) {
-            if (!empty($videoForm['id']->getData())) {
-                $videoRepository->editVideo($videoForm['id']->getData(),$videoForm['link']->getData());
-                $this->addFlash("success","La vidéo à été modifiée");
-            }
-            $videoRepository->createVideo($figure,$videoForm['link']->getData());
-            $figure->setModifiedAtNow();
-            $entityManager->flush();
-            $this->addFlash('success',"Votre vidéo à été ajoutée");
+            $this->editVideo($videoRepository,$videoForm['id']->getData(),$videoForm['link']->getData(),$figure,$entityManager);
             return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
         }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $figure = $form->getData();
-            $entityManager->persist($figure);
-            $figure->setModifiedAtNow();
-            $entityManager->flush();
-            $this->addFlash('success',"Le trick à été modifié!");
+            $this->editFigure($form->getData(), $entityManager);
             return $this->redirectToRoute("app_homepage");
         }
 
@@ -160,6 +142,43 @@ class AdminTricksController extends AbstractController
         $this->addFlash("success","La vidéo a été supprimée");
         return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
    }
+
+    public function editImage($newImageName,UploadedFile $uploadedFile,ImageRepository $imageRepository,$idImage,Figure $figure, EntityManagerInterface $entityManager)
+    {
+        if (!empty($idImage)) {
+            $imageRepository->editImage($idImage, $newImageName, $uploadedFile);
+            $this->addFlash('success',"L'image été modifiée !");
+        }
+        else {
+            $imageRepository->createImage($uploadedFile,$newImageName,$figure);
+            $this->addFlash('success',"L'image été ajoutée !");
+        }
+        $figure->setModifiedAtNow();
+        $entityManager->flush();
+    }
+
+    public function editVideo(VideoRepository $videoRepository,$videoId,$link,$figure,EntityManagerInterface $entityManager)
+    {
+        if (!empty($videoId)) {
+            $videoRepository->editVideo($videoId,$link);
+            $this->addFlash("success","La vidéo à été modifiée");
+        }
+        else{
+            $videoRepository->createVideo($figure,$link);
+            $this->addFlash('success',"Votre vidéo à été ajoutée");
+        }
+        $figure->setModifiedAtNow();
+        $entityManager->flush();
+    }
+
+    public function editFigure($newFigure,EntityManagerInterface $entityManager)
+    {
+        $figure = $newFigure;
+        $entityManager->persist($figure);
+        $figure->setModifiedAtNow();
+        $entityManager->flush();
+        $this->addFlash('success',"Le trick à été modifié!");
+    }
 
 
 }

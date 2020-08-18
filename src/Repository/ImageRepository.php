@@ -70,11 +70,12 @@ class ImageRepository extends BaseRepository
 
     public function editImage($id,$newImageName,UploadedFile $uploadedFile)
     {
+
         $image = $this->findOneBy(["id" => $id]);
         $this->filesystem->remove("images/tricks".$image->getName());
         $image->setName($newImageName);
         $this->entityManager->flush();
-        $uploadedFile->move('images/tricks', $newImageName);
+        $uploadedFile->move('images/tricks/', $newImageName);
     }
 
     public function deletePicsFromTrick($trickId,Filesystem $filesystem)
