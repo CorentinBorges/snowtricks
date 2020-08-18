@@ -72,7 +72,7 @@ class ImageRepository extends BaseRepository
     {
 
         $image = $this->findOneBy(["id" => $id]);
-        $this->filesystem->remove("images/tricks".$image->getName());
+        $this->filesystem->remove("images/tricks/".$image->getName());
         $image->setName($newImageName);
         $this->entityManager->flush();
         $uploadedFile->move('images/tricks/', $newImageName);

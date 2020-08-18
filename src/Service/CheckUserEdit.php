@@ -65,7 +65,6 @@ class CheckUserEdit
             throw new InvalidCsrfTokenException();
         }
 
-
         return $this->errors;
     }
 
