@@ -104,17 +104,15 @@
                             {% endif %}
 
 
-                            {% set nbRest = nbImages-trick.images|length %}
-                            {% if nbRest>0 %}
-                                {% for nb in 1..nbRest %}
+
                                     {% set form= imageForm.createView %}
                                     <div class="col-sm-4 col-12 mt-3">
-                                        <button data-toggle="modal" data-target="{{ "#edit" ~ nb }}" >
+                                        <button data-toggle="modal" data-target="{{ "#edit" }}" >
                                             <img class="col-sm-12" src="{{ asset('images/emptyImage.png') }}" alt="snow">
                                         </button></br>
 
 
-                                        <div class="modal fade" id="{{ "edit" ~ nb }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="{{ "edit"}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content ">
 
@@ -130,8 +128,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %}
-                            {% endif %}
+
 
                             {% for video in trick.videos %}
                                 {% set form= videoForm.createView %}
@@ -182,15 +179,13 @@
                                 </div>
                             {% endfor %}
 
-                            {% set nbRest = nbVideos-trick.videos|length %}
-                            {% if nbRest>0 %}
-                                {% for nb in 1..nbRest %}
+
                                     {% set form= videoForm.createView %}
                                     <div class="col-sm-4 col-12 mt-3">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="{{ "#addVid" ~ nb }}">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="{{ "#addVid" }}">
                                             <img class="col-sm-12" src="{{ asset('images/emptyVideo.png') }}" alt="snow">
                                         </button>
-                                        <div class="modal fade" id="{{ "addVid" ~ nb }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="{{ "addVid" }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content ">
 
@@ -206,8 +201,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %}
-                            {% endif %}
 
                         </div>
 
