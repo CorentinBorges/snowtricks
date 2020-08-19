@@ -7,11 +7,11 @@
         <div class="card mt-5 ">
             <div class="container pl-5 pr-5">
                 <div class="row mt-5 mb-5">
-                    <div class="col-sm-2 col-12 justify-content-end text-right">
+                    <div class="col-sm-2 col-md-5 col-12 justify-content-end text-right">
                         {% if user.avatarPath is not null %}
                             <img class="col-12" src="{{ asset('images/avatars/' ~ user.avatarPath) }}"/>
                         {% else %}
-                            <img class="col-12" src="{{ asset('images/face.jpg') }}"/>
+                            <img class="col-12" src="{{ asset('images/avatars/face.jpg') }}"/>
                         {% endif %}
                         <button class="pr-3 mr-3 btn btn-primary justify-content-end" data-toggle="modal" data-target="#editPic"><i class="fas fa-pencil-alt"></i></button>
 
