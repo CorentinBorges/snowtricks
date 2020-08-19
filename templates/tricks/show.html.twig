@@ -33,11 +33,11 @@
                         </div>
                         <p class="card-text mt-5">{{ trick.description }}</p>
                         <ul class="row description-list justify-content-center mt-5">
-                            <li><span class="text-dark">Ajouté le:</span> {{ trick.createdAt|date('d/m/Y') }}</li>
+                            <li><span class="text-dark">Ajouté le :</span> {{ trick.createdAt|date('d/m/Y') }}</li>
                             {% if trick.modifiedAt is not null%}
-                            <li><span class="text-dark">Modifié le:</span>  {{ trick.modifiedAt|date('d/m/Y')}} </li>
+                            <li><span class="text-dark">Modifié le :</span>  {{ trick.modifiedAt|date('d/m/Y')}} </li>
                             {% endif %}
-                            <li><span class="text-dark">Category:</span>  {{ trick.groupe }}</li>
+                            <li><span class="text-dark">Catégorie :</span>  {{ trick.groupe }}</li>
                         </ul>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
 
                             <div class="media-body">
                                 <h5 class="mt-0">{{ message.user.username }}</h5>
-                                <h5 class="mt-0">Posté le: {{ message.createdAt|date('d/m/Y') }} </h5>
+                                <h5 class="mt-0">Posté le : {{ message.createdAt|date('d/m/Y') }} </h5>
                                 {{ message.content }}
                             </div>
                         </div>
@@ -86,7 +86,7 @@
             {% if nbMessages > 0 %}
             <nav aria-label="Page navigation example" >
                 <ul class="pagination justify-content-center">
-                    <li class="page-item previous"><button class="page-link" >Previous</button></li>
+                    <li class="page-item previous"><button class="page-link" > << </button></li>
                     {% set nbPage=1 %}
                     {% set n=1 %}
                     {%for message in messages %}
@@ -98,7 +98,7 @@
                     {% for page in 1..nbPage %}
                         <li class="page-item " ><button class="page-link page page{{ page }}" value="{{ page }}">{{ page }}</button></li>
                     {% endfor %}
-                    <li class="page-item next"><button class="page-link">Next</button></li>
+                    <li class="page-item next"><button class="page-link"> >> </button></li>
                 </ul>
             </nav>
             {% endif %}

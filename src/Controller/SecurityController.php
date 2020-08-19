@@ -63,6 +63,7 @@ class SecurityController extends AbstractController
             $user
                 ->setRoles(['ROLE_ADMIN'])
                 ->setUsername($form['username']->getData())
+                ->setEmail($form['email']->getData())
                 ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
                 ->setIsValid(false);
             $entityManager->persist($user);
