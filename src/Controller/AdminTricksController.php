@@ -106,17 +106,13 @@ class AdminTricksController extends AbstractController
             $this->editFigure($form->getData(), $entityManager);
             return $this->redirectToRoute("app_homepage");
         }
-
-        $nbImages = TrickFormType::NB_IMAGE;
-        $nbVideos = TrickFormType::NB_VIDEO;
+        
 
         return $this->render("admin_tricks/edit.html.twig",
             [
                 "trickForm"=>$form->createView(),
                 "imageForm" => $imageForm,
                 "videoForm" => $videoForm,
-                "nbImages" => $nbImages,
-                "nbVideos" => $nbVideos,
                 "trick" => $figure,]);
     }
 
