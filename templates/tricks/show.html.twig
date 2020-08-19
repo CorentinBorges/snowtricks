@@ -8,7 +8,33 @@
             <div class="col mb-4">
                 <div class="card card-show">
 
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="justify-content-end text-right">
+                            <a class="pr-3" href="{{ path('admin_tricks_edit', {id: trick.id}) }}"><i class="fas fa-pencil-alt"></i></a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="{{ "#delete" ~ trick.id }}"><i class="far fa-trash-alt"></i></button>
 
+                            <div class="modal fade" id="{{ "delete" ~ trick.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content ">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-danger" id="exampleModalLabel">Supprimer figure: {{ trick.name }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body justify-content-start text-left">
+                                            ⚠ Voulez vous vraiment supprimer cette figure?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+
+                                            <button type="button" class="btn btn-danger"><a class="del_button" href="{{ path('admin_tricks_delete', {id: trick.id}) }}">Supprimer</a></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                     {% if trick.findFirst is not null %}
                         <img src="{{ asset('images/tricks/' ~ trick.findFirst) }}" class="card-img-top" alt="...">
                     {% else %}
