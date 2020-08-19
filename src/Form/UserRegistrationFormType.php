@@ -23,6 +23,7 @@ class UserRegistrationFormType extends AbstractType
             ->add('username', TextType::class,[
                 'label'=>'Nom d\'utilisateur',
             ])
+            ->add('email', EmailType::class)
             ->add('password',PasswordType::class,[
                 'mapped'=>false,
                 'required'=>true,
@@ -55,10 +56,8 @@ class UserRegistrationFormType extends AbstractType
                     ])
 
                 ]
-            ])
-            ->add('email', EmailType::class)
+            ]);
 
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

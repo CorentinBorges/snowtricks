@@ -9,6 +9,10 @@
         <button type="submit" class="btn btn-primary">S'enregistrer</button>
     {{ form_end(registrationForm) }}
     </div>
+
+    <div class="text-center container">
+        <a class="nav-link mt-2" href="{{ path('app_login') }}">Déjà inscrit?</a>
+    </div>
 {% endblock %}
 
 {% block title %}Inscription{% endblock %}
