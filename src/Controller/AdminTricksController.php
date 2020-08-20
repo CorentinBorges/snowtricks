@@ -39,16 +39,26 @@ class AdminTricksController extends AbstractController
     public function add(Request $request, EntityManagerInterface $entityManager,FileUploader $fileUploader,ImageRepository $imageRepository, VideoRepository $videoRepository, FigureRepository $figureRepository)
     {
         $form = $this->createForm(TrickFormType::class);
-        $image = new Image();
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $image=$form->get('image')->getData();
-            if ($image) {
-                $imageName = $fileUploader->upload($image);
-                /** @var Figure $figure */
-                $figure=$form->getData();
+            /** @var Figure $figure */
+            $figure = $form->getData();
+            $images=$form->get('images');
+            foreach ($images as $image) {
+                $imageFile=$image->get('image')->getData();
+                $imageFileName=$fileUploader->upload($imageFile);
+                $image=$image->getData();
+                /** @var Image $image */
+                $image->setName($imageFileName);
+                $entityManager->persist($image);
             }
+            $figure->setCreatedAtNow();
+           
+            $entityManager->persist($figure);
+            $entityManager->flush();
+
+
         }
 
 
@@ -71,7 +81,6 @@ class AdminTricksController extends AbstractController
 
         return $this->render('admin_tricks/new.html.twig', [
             'form' => $form->createView(),
-
         ]);
     }
 

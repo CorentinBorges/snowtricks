@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}SnowTricks-Accueil{% endblock %}
-
+{#todo: ajouter alt aux images+delete tricks=delete aussi les images Files#}
 {% block body %}
     {% for message in app.flashes('success') %}
         <div class="alert alert-success container text-center mt-3">
