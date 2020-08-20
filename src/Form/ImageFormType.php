@@ -48,9 +48,11 @@ class ImageFormType extends AbstractType
                 'attr'=>[
                     'class'=>'checkFirst mt-2',
                     'type'=>"radio",
+                    'checked'=>false
                 ],
                 'label'=>'Image mise en avant',
                 'required'=>false,
+
             ])
             ->add('idImage',HiddenType::class,[
                 'mapped'=>false,

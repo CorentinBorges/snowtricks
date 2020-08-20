@@ -58,12 +58,10 @@ class SecurityController extends AbstractController
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $user = new User();
+            /** @var User $user */
+            $user = $form->getData();
             $user
                 ->setRoles(['ROLE_ADMIN'])
-                ->setUsername($form['username']->getData())
-                ->setEmail($form['email']->getData())
                 ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
                 ->setIsValid(false);
             $entityManager->persist($user);
