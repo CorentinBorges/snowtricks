@@ -237,7 +237,7 @@ class Figure
         $images = $this->getImages();
         foreach ($images as $image) {
             if ($image->getFirst() == 1) {
-                return $image->getName();
+                return $image;
             }
         }
     }

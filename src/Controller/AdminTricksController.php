@@ -45,6 +45,11 @@ class AdminTricksController extends AbstractController
             /** @var Figure $figure */
             $figure = $form->getData();
             $images=$form->get('images');
+            $videos = $form['videos']->getData();
+            foreach ($videos as $video) {
+                /** @var Video $video */
+                $entityManager->persist($video);
+            }
             foreach ($images as $image) {
                 $imageFile=$image->get('image')->getData();
                 $imageFileName=$fileUploader->upload($imageFile);
@@ -53,11 +58,12 @@ class AdminTricksController extends AbstractController
                 $image->setName($imageFileName);
                 $entityManager->persist($image);
             }
+
             $figure->setCreatedAtNow();
-           
             $entityManager->persist($figure);
             $entityManager->flush();
-
+            $this->addFlash("success","Yes !!! Votre trick à bien été ajouté !! ❄❄❄");
+            return $this->redirectToRoute('app_homepage');
 
         }
 

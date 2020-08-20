@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Url;
+use function Sodium\add;
 
 class TrickFormType extends AbstractType
 {
@@ -61,6 +62,12 @@ class TrickFormType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true
+            ])
+            ->add('videos',CollectionType::class,[
+                'entry_type'=>VideoFormType::class,
+                'allow_add'=>true,
+                'allow_delete'=>true,
+                'prototype'=>true
             ]);
 
             /*for ($i=1;$i<=self::NB_IMAGE;$i++) {
@@ -90,7 +97,7 @@ class TrickFormType extends AbstractType
                     ]);
             }*/
 
-        for ($n=1;$n<=self::NB_VIDEO; $n++) {
+       /* for ($n=1;$n<=self::NB_VIDEO; $n++) {
             $builder
                 ->add('video'.$n,$hideFieldTypeVideo,[
                     'label'=>'Vidéo '.$n.' (Url Youtube)',
@@ -106,7 +113,7 @@ class TrickFormType extends AbstractType
                         ])
                     ]
                 ]);
-        }
+        }*/
 
 
     }

@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Video
 {
+    const YOUTUBE_LINK = "https://www.youtube.com/embed/";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -40,7 +42,10 @@ class Video
 
     public function setLink(string $link): self
     {
-        $this->link = $link;
+
+        $linkArray=preg_split('#/#',$link);
+        $linkCode = $linkArray[3];
+        $this->link=self::YOUTUBE_LINK . $linkCode;
 
         return $this;
     }
