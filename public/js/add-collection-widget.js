@@ -1,8 +1,8 @@
 var $collectionHolder;
 
 // setup an "add a tag" link
-var $addTagButton = $('<button type="button" class="add_tag_link">Ajouter une image</button>');
-var $newLinkLi = $('<li></li>').append($addTagButton);
+var $addTagButton = $('<button type="button" class="add_tag_link btn btn-warning " >Ajouter une image <i class="far fa-image"></i></button>');
+var $newLinkLi = $('<li class="list-unstyled text-center "></li>').append($addTagButton);
 // var $newFormLi= $('<button type="button" class="add_tag_link">Ajouter une image</button>');
 
 jQuery(document).ready(function() {
@@ -16,7 +16,7 @@ jQuery(document).ready(function() {
 
 
     function addTagFormDeleteLink($tagFormLi) {
-        var $removeFormButton = $('<button type="button">Supprimer l\'image</button>');
+        var $removeFormButton = $('<button type="button" class="btn btn-danger mt-0 ">Supprimer l\'image</button>');
         $tagFormLi.append($removeFormButton);
 
         $removeFormButton.on('click', function(e) {
@@ -60,14 +60,14 @@ function addTagForm($collectionHolder, $newLinkLi) {
     $collectionHolder.data('index', index + 1);
 
     // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('<li></li>').append(newForm);
+    var $newFormLi = $('<li class=" mt-3"></li>').append(newForm);
     $newLinkLi.before($newFormLi);
 
     addTagFormDeleteLink($newFormLi);
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-    var $removeFormButton = $('<button type="button">Supprimer l\'image</button>');
+    var $removeFormButton = $('<button type="button" class="btn btn-danger mt-0 ">Supprimer l\'image</button>');
     $tagFormLi.append($removeFormButton);
 
     $removeFormButton.on('click', function(e) {
@@ -81,8 +81,8 @@ function addTagFormDeleteLink($tagFormLi) {
 var $collectionHolderVideo;
 
 // setup an "add a tag" link
-var $addVideoButton = $('<button type="button" class="add_tag_link">Ajouter une video</button>');
-var $newVideoLinkLi = $('<li></li>').append($addVideoButton);
+var $addVideoButton = $('<button type="button" class="add_tag_link btn btn-warning mb-5" >Ajouter une video <i class="fab fa-youtube"></i></button>');
+var $newVideoLinkLi = $('<li class="list-unstyled text-center mt-1"></li>').append($addVideoButton);
 // var $newFormLi= $('<button type="button" class="add_tag_link">Ajouter une image</button>');
 
 jQuery(document).ready(function() {
@@ -140,14 +140,14 @@ function addVideoForm($collectionHolderVideo, $newVideoLinkLi) {
     $collectionHolderVideo.data('index', index + 1);
 
     // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('<li></li>').append(newForm);
+    var $newFormLi = $('<li class="mt-3 "></li>').append(newForm);
     $newVideoLinkLi.before($newFormLi);
 
     addTagFormDeleteVideoLink($newFormLi);
 }
 
 function addTagFormDeleteVideoLink($videoFormLi) {
-    var $removeFormVideoButton = $('<button type="button">Supprimer la video</button>');
+    var $removeFormVideoButton = $('<button type="button" class="mb-2 mt-0 btn btn-danger">Supprimer la video</button>');
     $videoFormLi.append($removeFormVideoButton);
 
     $removeFormVideoButton.on('click', function(e) {

@@ -5,8 +5,10 @@ namespace App\Form;
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,7 +27,8 @@ class ImageFormType extends AbstractType
                 'mapped'=>false,
                 'attr'=>[
                     'accept' => "image/png, image/jpeg",
-                    'custom-file-label' => 'charger'],
+                    'custom-file-label' => 'charger',
+                    ],
                 'constraints'=>[
                     new File([
                         'maxSize' => '200M',
@@ -41,10 +44,12 @@ class ImageFormType extends AbstractType
                 'label'=>"Champs alt"
                 ]
             )
-            ->add('first', CheckboxType::class,[
+            ->add('first', RadioType::class,[
                 'attr'=>[
-                    'class'=>'checkFirst'
+                    'class'=>'checkFirst mt-2',
+                    'type'=>"radio",
                 ],
+                'label'=>'Image mise en avant',
                 'required'=>false,
             ])
             ->add('idImage',HiddenType::class,[
