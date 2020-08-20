@@ -253,4 +253,14 @@ class Figure
         $now = new \DateTime("now");
         $this->setModifiedAt($now);
     }
+
+    /*public function addImages(Image $image)
+    {
+        $image->setFigure($this);
+    }
+
+    public function removeImages(Image $image)
+    {
+        $this->images->removeElement($image);
+    }*/
 }

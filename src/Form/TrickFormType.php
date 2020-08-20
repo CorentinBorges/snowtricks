@@ -7,6 +7,7 @@ use App\Entity\Image;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -53,9 +54,17 @@ class TrickFormType extends AbstractType
                     'slides'=>'slides',
                     'old school' => 'old school'
                 ]
-            ]);
+            ])
+            ->add('images',CollectionType::class,[
+                'entry_type' => ImageFormType::class,
+                'by_reference'=>false,
+                'entry_options' => ['label' => false],
+                'allow_add'=>true,
+                'allow_delete'=>true,
+                'prototype'=>true
+                ]) ;
 
-            for ($i=1;$i<=self::NB_IMAGE;$i++) {
+            /*for ($i=1;$i<=self::NB_IMAGE;$i++) {
 
                 $textFirst = ($i == 1) ? " (image mise en avant)" : "";
 
@@ -80,7 +89,7 @@ class TrickFormType extends AbstractType
                             ])
                         ]
                     ]);
-            }
+            }*/
 
         for ($n=1;$n<=self::NB_VIDEO; $n++) {
             $builder
@@ -102,6 +111,8 @@ class TrickFormType extends AbstractType
 
 
     }
+
+
 
     public function configureOptions(OptionsResolver $resolver)
     {

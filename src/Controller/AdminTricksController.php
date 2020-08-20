@@ -13,6 +13,7 @@ use App\Repository\FigureRepository;
 use App\Repository\ImageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\VideoRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,11 +30,29 @@ class AdminTricksController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param EntityManagerInterface $entityManager
+     * @param FileUploader $fileUploader
+     * @param ImageRepository $imageRepository
+     * @param VideoRepository $videoRepository
+     * @param FigureRepository $figureRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function add(Request $request, EntityManagerInterface $entityManager,ImageRepository $imageRepository, VideoRepository $videoRepository, FigureRepository $figureRepository)
+    public function add(Request $request, EntityManagerInterface $entityManager,FileUploader $fileUploader,ImageRepository $imageRepository, VideoRepository $videoRepository, FigureRepository $figureRepository)
     {
         $form = $this->createForm(TrickFormType::class);
+        $image = new Image();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $image=$form->get('image')->getData();
+            if ($image) {
+                $imageName = $fileUploader->upload($image);
+                /** @var Figure $figure */
+                $figure=$form->getData();
+            }
+        }
+
+
+        /*$form = $this->createForm(TrickFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,10 +67,10 @@ class AdminTricksController extends AbstractController
 
             $this->addFlash("success","Yes !!! Votre trick à bien été ajouté !! ❄❄❄");
             return $this->redirectToRoute('app_homepage');
-        }
+        }*/
 
         return $this->render('admin_tricks/new.html.twig', [
-            'trickForm' => $form->createView(),
+            'form' => $form->createView(),
 
         ]);
     }
