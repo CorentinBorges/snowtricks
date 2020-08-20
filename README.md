@@ -24,7 +24,6 @@ This is a blog for trick's lovers !
 4.  Create the database
     ```bash
     php bin/console doctrine:database:create
-    php bin/console make:migration
     php bin/console doctrine:migration:migrate
     ```
 

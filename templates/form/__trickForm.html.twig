@@ -1,0 +1,15 @@
+
+{{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.groupe) }}
+    <div class="mt-3">
+        <ul class="images" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"></ul>
+        <ul class="videos" data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}"></ul>
+    </div>
+
+    {% do form.images.setRendered %}
+                        {% do form.videos.setRendered %}
+
+    <button type="submit" class="btn btn-primary">Enregistrer le trick</button>
+{{ form_end(form) }}
