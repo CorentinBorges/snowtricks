@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,7 +37,7 @@ class AdminTricksController extends AbstractController
      * @param FigureRepository $figureRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function add(Request $request, EntityManagerInterface $entityManager,FileUploader $fileUploader,ImageRepository $imageRepository, VideoRepository $videoRepository, FigureRepository $figureRepository)
+    public function add(Request $request, EntityManagerInterface $entityManager,FileUploader $fileUploader)
     {
         $form = $this->createForm(TrickFormType::class);
 
@@ -66,24 +67,6 @@ class AdminTricksController extends AbstractController
             return $this->redirectToRoute('app_homepage');
 
         }
-
-
-        /*$form = $this->createForm(TrickFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $name = $form['name']->getData();
-            $description = $form['description']->getData();
-            $groupe = $form['groupe']->getData();
-
-            $figure = $figureRepository->createFigure($name,$description,$groupe);
-            $imageRepository->createImages($form, $figure);
-            $videoRepository->createVideos($form,$figure);
-            $entityManager->flush();
-
-            $this->addFlash("success","Yes !!! Votre trick à bien été ajouté !! ❄❄❄");
-            return $this->redirectToRoute('app_homepage');
-        }*/
 
         return $this->render('admin_tricks/new.html.twig', [
             'form' => $form->createView(),
@@ -117,7 +100,7 @@ class AdminTricksController extends AbstractController
      * @param Figure $figure
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editTrick(Figure $figure,$id,Request $request,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem,VideoRepository $videoRepository)
+    public function editTrick(Figure $figure,$id,FileUploader $fileUploader,Request $request,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem,VideoRepository $videoRepository)
     {
         $form = $this->createForm(TrickFormType::class,$figure,["is_edit"=>true]);
         $imageForm = $this->createForm(ImageFormType::class);
@@ -125,11 +108,18 @@ class AdminTricksController extends AbstractController
 
         $imageForm->handleRequest($request);
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-            $this->editImage(uniqid() . $imageForm["image"]->getData()->getClientOriginalName(), $imageForm["image"]->getData(), $imageRepository, $imageForm['idImage']->getData(), $figure, $entityManager);
+            $idImage=$imageForm['idImage']->getData();
+            /** @var Image $image */
+            $image = $imageForm->getData();
+            $imageFile=$imageForm->get('image')->getData();
+            $imageFileName= $fileUploader->upload($imageFile);
+            $imageRepository->editImage($idImage,$id,$imageFileName,$image);
+
+            $this->addFlash('success','L\'image bien été modifiée !');
             return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
         }
-
-        $videoForm->handleRequest($request);
+//todo:edit+show if no image first
+        /*$videoForm->handleRequest($request);
         if ($videoForm->isSubmitted() && $videoForm->isValid()) {
             $this->editVideo($videoRepository,$videoForm['id']->getData(),$videoForm['link']->getData(),$figure,$entityManager);
             return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
@@ -139,12 +129,12 @@ class AdminTricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->editFigure($form->getData(), $entityManager);
             return $this->redirectToRoute("app_homepage");
-        }
+        }*/
         
 
         return $this->render("admin_tricks/edit.html.twig",
             [
-                "trickForm"=>$form->createView(),
+                "form"=>$form->createView(),
                 "imageForm" => $imageForm,
                 "videoForm" => $videoForm,
                 "trick" => $figure,]);
@@ -173,19 +163,6 @@ class AdminTricksController extends AbstractController
         return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
    }
 
-    public function editImage($newImageName,UploadedFile $uploadedFile,ImageRepository $imageRepository,$idImage,Figure $figure, EntityManagerInterface $entityManager)
-    {
-        if (!empty($idImage)) {
-            $imageRepository->editImage($idImage, $newImageName, $uploadedFile);
-            $this->addFlash('success',"L'image été modifiée !");
-        }
-        else {
-            $imageRepository->createImage($uploadedFile,$newImageName,$figure);
-            $this->addFlash('success',"L'image été ajoutée !");
-        }
-        $figure->setModifiedAtNow();
-        $entityManager->flush();
-    }
 
     public function editVideo(VideoRepository $videoRepository,$videoId,$link,$figure,EntityManagerInterface $entityManager)
     {

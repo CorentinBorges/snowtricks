@@ -48,6 +48,16 @@ class ImageRepository extends BaseRepository
         $uploadedFile->move('images/tricks/', $imageName);
     }
 
+    public function findFirst($figureId)
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.figure = :val')
+            ->andWhere('i.first = true')
+            ->setParameter('val', $figureId)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+    }
 
     public function createImages(FormInterface $form, Figure $figure)
     {
@@ -68,14 +78,24 @@ class ImageRepository extends BaseRepository
         }
     }
 
-    public function editImage($id,$newImageName,UploadedFile $uploadedFile)
+    public function editImage($imageId,$figureId,$imageFileName,Image $newImage)
     {
 
-        $image = $this->findOneBy(["id" => $id]);
+        $image = $this->findOneBy(["id" => $imageId]);
         $this->filesystem->remove("images/tricks/".$image->getName());
-        $image->setName($newImageName);
+        if ($newImage->getFirst()) {
+            if ($oldImgFirst=$this->findFirst($figureId)) {
+                /** @var Image $oldImgFirst */
+                $oldImgFirst->setFirst(false);
+                $image->setFirst($newImage->getFirst());
+            }
+        }
+        if ($image->getFirst() && ($newImage->getFirst()===false)) {
+            $image->setFirst(false);
+        }
+        $image->setName($imageFileName);
+        $this->entityManager->persist($image);
         $this->entityManager->flush();
-        $uploadedFile->move('images/tricks/', $newImageName);
     }
 
     public function deletePicsFromTrick($trickId,Filesystem $filesystem)

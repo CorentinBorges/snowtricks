@@ -236,11 +236,21 @@ class Figure
     {
         $images = $this->getImages();
         foreach ($images as $image) {
-            if ($image->getFirst() == 1) {
+            if ($image->getFirst()) {
                 return $image;
             }
         }
+        return null;
     }
+
+    public function createFirst()
+    {
+        $images = $this->getImages();
+        foreach ($images as $image) {
+                return $image->getName();
+        }
+    }
+
 
     public function setCreatedAtNow()
     {

@@ -41,6 +41,8 @@
 
                     {% if trick.findFirst is not null %}
                         <img src="{{ asset('images/tricks/' ~ trick.findFirst.name) }}" class="card-img-top" alt="{{ trick.findFirst.alt }}">
+                    {% elseif trick.findFirst is null and trick.images is not null %}
+                        <img src="{{ asset('images/tricks/' ~ trick.createFirst) }}" class="card-img-top" alt="Snowboard dans la neige">
                     {% else %}
                         <img src="{{ asset('images/trick1.jpg') }}" class="card-img-top" alt="Snowboard dans la neige">
                     {% endif %}
@@ -50,10 +52,10 @@
                         <div class="row justify-content-start" >
                             {% if trick.images is not null %}
                                 {% for image in trick.images %}
-                                    {% set form= imageForm.createView %}
+                                    {% set imgForm= imageForm.createView %}
                                     <div class="col-sm-4 col-12 mt-3">
                                         <a  href="{{ asset('images/tricks/' ~ image.name) }}" target="_blank" class="  ">
-                                            <img class="col-sm-12" src="{{ asset('images/tricks/' ~ image.name) }}" alt="snow">
+                                            <img class="col-sm-12" src="{{ asset('images/tricks/' ~ image.name) }}" alt="{{ image.alt }}">
                                         </a></br>
                                         <div class="col-12 col-sm-12 justify-content-right text-right">
                                             <button class="pr-3 btn btn-primary" data-toggle="modal" data-target="{{ "#edit" ~ image.id }}"><i class="fas fa-pencil-alt"></i></button>
@@ -86,13 +88,13 @@
 
                                                     <div class="modal-body justify-content-start text-left">
                                                         {% set imageId=image.id %}
-                                                        {{ form_start(form) }}
-                                                            {{ form_row(form.image) }}
-                                                            {{ form_row(form.idImage, {"value" : imageId })}}
-                                                            {{ form_row(form.alt) }}
-                                                            {{ form_row(form.first) }}
+                                                        {{ form_start(imgForm) }}
+                                                            {{ form_row(imgForm.image) }}
+                                                            {{ form_row(imgForm.idImage, {"value" : imageId })}}
+                                                            {{ form_row(imgForm.alt) }}
+                                                            {{ form_row(imgForm.first) }}
                                                             <button type="submit" class="btn btn-success " >Envoyer</button>
-                                                        {{ form_end(form) }}
+                                                        {{ form_end(imgForm) }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,7 +109,7 @@
 
 
 
-                                    {% set form= imageForm.createView %}
+                                   {# {% set form= imageForm.createView %}
                                     <div class="col-sm-4 col-12 mt-3">
                                         <button data-toggle="modal" data-target="{{ "#edit" }}" >
                                             <img class="col-sm-12" src="{{ asset('images/emptyImage.png') }}" alt="snow">
@@ -131,11 +133,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>#}
 
 
                             {% for video in trick.videos %}
-                                {% set form= videoForm.createView %}
+                                {% set vidForm= videoForm.createView %}
                                 <div>
                                     <iframe class="mt-5 ml-3 ml-sm-5" src="{{ video.link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     <div class="  col-12 col-sm-12 justify-content-right text-right">
@@ -148,11 +150,11 @@
                                                     <div class="modal-body justify-content-start text-left">
 
                                                         {% set videoId=video.id %}
-                                                        {{ form_start(form) }}
-                                                            {{ form_row(form.link) }}
-                                                            {{ form_row(form.id,{"value" : videoId}) }}
+                                                        {{ form_start(vidForm) }}
+                                                            {{ form_row(vidForm.link) }}
+                                                            {{ form_row(vidForm.id,{"value" : videoId}) }}
                                                             <button type="submit" class="btn btn-success " >Envoyer</button>
-                                                        {{ form_end(form) }}
+                                                        {{ form_end(vidForm) }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,7 +186,7 @@
                             {% endfor %}
 
 
-                                    {% set form= videoForm.createView %}
+                                    {#{% set form= videoForm.createView %}
                                     <div class="col-sm-4 col-12 mt-3">
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="{{ "#addVid" }}">
                                             <img class="col-sm-12" src="{{ asset('images/emptyVideo.png') }}" alt="snow">
@@ -204,7 +206,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>#}
 
                         </div>
 
@@ -216,16 +218,7 @@
 
 
 
-                        {{ form_start(trickForm) }}
-                            {{ form_row(trickForm.name) }}
-                            {{ form_row(trickForm.description) }}
-                            {{ form_row(trickForm.groupe) }}
-
-
-                            <button type="submit" class="pr-3 btn btn-success" >Enregistrer</button>
-                            <button type="button" class="btn btn-danger text-right " data-toggle="modal" data-target="#delete">Supprimer</button>
-
-                        {{ form_end(trickForm) }}
+                        {{ include('form/__trickForm.html.twig') }}
 
 
 
@@ -239,7 +232,11 @@
 {% block title %}{{ trick.name }}{% endblock %}
 {% block javascripts %}
     {{ parent() }}
+{#    todo: mettre script dans un block dans le form    #}
     <script src="{{ asset('js/loadedFilesDisplayed.js') }}"></script>
+    <script src="{{ asset('js/add-collection-widget.js') }}" ></script>
+    <script src="{{ asset('js/checkbox-first-widget.js') }}"></script>
+
 {% endblock %}
 
 
