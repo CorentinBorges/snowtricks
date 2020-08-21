@@ -24,7 +24,7 @@ class VideoRepository extends BaseRepository
         parent::__construct($registry, Video::class,$entityManager);
     }
 
-    public function createVideo($figure,$link)
+    /*public function createVideo($figure,$link)
     {
         $video = new Video();
         $linkArray = preg_split('#/#', $link);
@@ -34,9 +34,9 @@ class VideoRepository extends BaseRepository
             ->setLink(self::YOUTUBE_LINK.$linkCode);
         $this->entityManager->persist($video);
         $this->entityManager->flush();
-    }
+    }*/
 
-    public function createVideos(FormInterface $form, Figure $figure)
+    /*public function createVideos(FormInterface $form, Figure $figure)
     {
         for ($n=1;$n<=TrickFormType::NB_VIDEO;$n++) {
             if (isset($form['video'.$n]) &&  !empty($form['video'.$n]->getData())) {
@@ -50,13 +50,12 @@ class VideoRepository extends BaseRepository
                 $this->entityManager->persist($video);
             }
         }
-    }
+    }*/
 
-    public function editVideo(int $id,string $link)
+    public function editVideo(int $videoId,Video $newVideo,Figure $figure)
     {
-        $video = $this->findOneBy(["id" => $id]);
-        $finalLink = $this->createLink($link);
-        $video->setLink($finalLink);
+        $video = $this->findOneBy(["id" => $videoId]);
+        $video->setEmbedLink($newVideo->getLink());
         $this->entityManager->persist($video);
         $this->entityManager->flush();
     }

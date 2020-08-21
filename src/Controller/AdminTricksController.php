@@ -100,24 +100,54 @@ class AdminTricksController extends AbstractController
      * @param Figure $figure
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editTrick(Figure $figure,$id,FileUploader $fileUploader,Request $request,EntityManagerInterface $entityManager,ImageRepository $imageRepository,Filesystem $filesystem,VideoRepository $videoRepository)
+    public function editTrick(Figure $figure,$id,FileUploader $fileUploader,Request $request,EntityManagerInterface $entityManager,ImageRepository $imageRepository,FigureRepository $figureRepository,VideoRepository $videoRepository)
     {
-        $form = $this->createForm(TrickFormType::class,$figure,["is_edit"=>true]);
-        $imageForm = $this->createForm(ImageFormType::class);
+        $form = $this->createForm(TrickFormType::class,$figure,['is_edit'=>true]);
+        $imageForm = $this->createForm(ImageFormType::class,null,["is_edit"=>true]);
         $videoForm = $this->createForm(VideoFormType::class);
+        $this->editImageTrick($imageForm,$request,$fileUploader,$imageRepository,$id,$figure);
+        $this->editVideoTrick($videoForm, $videoRepository, $figure, $request, $id);
 
-        $imageForm->handleRequest($request);
-        if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-            $idImage=$imageForm['idImage']->getData();
-            /** @var Image $image */
-            $image = $imageForm->getData();
-            $imageFile=$imageForm->get('image')->getData();
-            $imageFileName= $fileUploader->upload($imageFile);
-            $imageRepository->editImage($idImage,$id,$imageFileName,$image);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->addFlash('success','L\'image bien été modifiée !');
-            return $this->redirectToRoute('admin_tricks_edit',['id'=>$id]);
+            /** @var Figure $figure */
+            $figure = $figureRepository->findOneBy(['id'=>$id]);
+            $images=$form->get('images');
+            $videos = $form['videos']->getData();
+
+            foreach ($images as $image) {
+                $imageFile=$image->get('image')->getData();
+                $imageFileName=$fileUploader->upload($imageFile);
+                $image=$image->getData();
+                if ($image->getFirst()) {
+                    if ($oldImgFirst=$imageRepository->findFirst($figure->getId())) {
+                        /** @var Image $oldImgFirst */
+                        $oldImgFirst->setFirst(false);
+                    }
+                }
+                /** @var Image $image */
+                $image->setName($imageFileName);
+                $image->setFigure($figure);
+                $entityManager->persist($image);
+            }
+            foreach ($videos as $video) {
+                /** @var Video $video */
+                $video->setFigure($figure);
+                $entityManager->persist($video);
+            }
+            $figure->setModifiedAtNow();
+            $entityManager->persist($figure);
+            $entityManager->flush();
+            $this->addFlash("success","Yes !!! Votre trick à bien été édité !! ❄❄❄");
+            return $this->redirectToRoute('admin_tricks_edit', ['id' => $id]);
         }
+
+
+
+
+
+
 //todo:edit+show if no image first
         /*$videoForm->handleRequest($request);
         if ($videoForm->isSubmitted() && $videoForm->isValid()) {
@@ -138,6 +168,36 @@ class AdminTricksController extends AbstractController
                 "imageForm" => $imageForm,
                 "videoForm" => $videoForm,
                 "trick" => $figure,]);
+    }
+
+    public function editImageTrick(FormInterface $imageForm,Request $request,FileUploader $fileUploader,ImageRepository $imageRepository,$trickId,Figure $figure)
+    {
+        $imageForm->handleRequest($request);
+        if ($imageForm->isSubmitted() && $imageForm->isValid()) {
+            /** @var Image $image */
+            $image = $imageForm->getData();
+            $imageFileName = null;
+            if (!empty($imageForm->get('image')->getData())) {
+                $imageFile=$imageForm->get('image')->getData();
+                $imageFileName=$fileUploader->upload($imageFile);
+                $image->setName($imageFileName);
+            }
+            $imageRepository->editImage($figure,$image);
+            $this->addFlash('success', 'L\'image bien été modifiée !');
+            return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
+        }
+    }
+
+    public function editVideoTrick(FormInterface $videoForm,VideoRepository $videoRepository,Figure $figure,Request $request,$trickId)
+    {
+        $videoForm->handleRequest($request);
+        if ($videoForm->isSubmitted() && $videoForm->isValid()) {
+            $video = $videoForm->getData();
+            $videoId=$videoForm['id']->getData();
+            $videoRepository->editVideo($videoId,$video,$figure);
+            $this->addFlash('success', 'La vidéo bien été modifiée !');
+            return $this->redirectToRoute('admin_tricks_edit', ['id' => $trickId]);
+        }
     }
 
     /**
@@ -164,7 +224,7 @@ class AdminTricksController extends AbstractController
    }
 
 
-    public function editVideo(VideoRepository $videoRepository,$videoId,$link,$figure,EntityManagerInterface $entityManager)
+    /*public function editVideo(VideoRepository $videoRepository,$videoId,$link,$figure,EntityManagerInterface $entityManager)
     {
         if (!empty($videoId)) {
             $videoRepository->editVideo($videoId,$link);
@@ -176,16 +236,16 @@ class AdminTricksController extends AbstractController
         }
         $figure->setModifiedAtNow();
         $entityManager->flush();
-    }
+    }*/
 
-    public function editFigure($newFigure,EntityManagerInterface $entityManager)
+    /*public function editFigure($newFigure,EntityManagerInterface $entityManager)
     {
         $figure = $newFigure;
         $entityManager->persist($figure);
         $figure->setModifiedAtNow();
         $entityManager->flush();
         $this->addFlash('success',"Le trick à été modifié!");
-    }
+    }*/
 
 
 }

@@ -27,8 +27,7 @@ class TrickFormType extends AbstractType
     const NB_VIDEO = 3;
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $hideFieldTypeImage = $options['is_edit'] ? HiddenType::class : FileType::class;
-        $hideFieldTypeVideo = $options['is_edit'] ? HiddenType::class : TextType::class;
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom du trick *',
@@ -55,20 +54,41 @@ class TrickFormType extends AbstractType
                     'slides' => 'slides',
                     'old school' => 'old school'
                 ]
-            ])
-            ->add('images', CollectionType::class, [
+            ]);
+        if ($options['is_edit']) {
+           $builder ->add('images', CollectionType::class, [
                 'entry_type' => ImageFormType::class,
                 'entry_options' => ['label' => false],
+                'mapped' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype' => true
-            ])
-            ->add('videos',CollectionType::class,[
+                'prototype' => true]);
+            $builder->add('videos',CollectionType::class,[
+                'entry_type'=>VideoFormType::class,
+                'mapped' => false,
+                'allow_add'=>true,
+                'allow_delete'=>true,
+                'prototype'=>true
+            ]);
+        }
+        else{
+            $builder
+                ->add('images', CollectionType::class, [
+                    'entry_type' => ImageFormType::class,
+                    'entry_options' => ['label' => false],
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'prototype' => true]);
+            $builder->add('videos',CollectionType::class,[
                 'entry_type'=>VideoFormType::class,
                 'allow_add'=>true,
                 'allow_delete'=>true,
                 'prototype'=>true
             ]);
+        }
+
+
+
 
             /*for ($i=1;$i<=self::NB_IMAGE;$i++) {
 

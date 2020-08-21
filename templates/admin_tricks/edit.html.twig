@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{#todo:image mise en avant option#}
 {% block body %}
     <div class="container justify-content-center mt-5">
 
@@ -86,13 +86,21 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content ">
 
+
+                                                    {{ dump(image.first==true   ) }}
                                                     <div class="modal-body justify-content-start text-left">
                                                         {% set imageId=image.id %}
                                                         {{ form_start(imgForm) }}
+                                                            {{ form_row(imgForm.id, {"value" : image.id})}}
+                                                            {{ form_row(imgForm.name, {"value" : image.name})}}
                                                             {{ form_row(imgForm.image) }}
-                                                            {{ form_row(imgForm.idImage, {"value" : imageId })}}
-                                                            {{ form_row(imgForm.alt) }}
+                                                            {{ form_row(imgForm.alt,{"value" : image.alt}) }}
+                                                        {#todo: ask karim pourquoi ca marche pas le ckecked#}
+                                                        {% if image.first == true %}
+                                                            {{ form_row(imgForm.first, {'attr': {'checked':'checked'}}) }}
+                                                        {% else %}
                                                             {{ form_row(imgForm.first) }}
+                                                        {% endif %}
                                                             <button type="submit" class="btn btn-success " >Envoyer</button>
                                                         {{ form_end(imgForm) }}
                                                     </div>
@@ -236,6 +244,7 @@
     <script src="{{ asset('js/loadedFilesDisplayed.js') }}"></script>
     <script src="{{ asset('js/add-collection-widget.js') }}" ></script>
     <script src="{{ asset('js/checkbox-first-widget.js') }}"></script>
+
 
 {% endblock %}
 

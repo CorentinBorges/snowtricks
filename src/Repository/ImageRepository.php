@@ -9,6 +9,7 @@ use App\Form\TrickFormType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Node\Scalar\String_;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -59,7 +60,7 @@ class ImageRepository extends BaseRepository
 
     }
 
-    public function createImages(FormInterface $form, Figure $figure)
+    /*public function createImages(FormInterface $form, Figure $figure)
     {
         for ($i=1;$i<=TrickFormType::NB_IMAGE;$i++) {
             if (isset($form['image' . $i]) && !empty($form['image' . $i]->getData())) {
@@ -71,29 +72,28 @@ class ImageRepository extends BaseRepository
                     ->setFirst($i == 1);
 
                 $this->entityManager->persist($image);
-                /** @var  $file File */
+                @var  $file File
                 $file = $form['image' . $i]->getData();
                 $file->move('images/tricks/', $imageName);
             }
         }
-    }
+    }*/
 
-    public function editImage($imageId,$figureId,$imageFileName,Image $newImage)
+    public function editImage(Figure $figure,Image $newImage)
     {
-
-        $image = $this->findOneBy(["id" => $imageId]);
-        $this->filesystem->remove("images/tricks/".$image->getName());
+        $image = $this->findOneBy(["id" => $newImage->getId()]);
         if ($newImage->getFirst()) {
-            if ($oldImgFirst=$this->findFirst($figureId)) {
+            if ($oldImgFirst=$this->findFirst($figure->getId())) {
                 /** @var Image $oldImgFirst */
                 $oldImgFirst->setFirst(false);
-                $image->setFirst($newImage->getFirst());
             }
         }
         if ($image->getFirst() && ($newImage->getFirst()===false)) {
             $image->setFirst(false);
         }
-        $image->setName($imageFileName);
+        $image->setFirst($newImage->getFirst());
+        $image->setName($newImage->getName());
+        $image->setAlt($newImage->getAlt());
         $this->entityManager->persist($image);
         $this->entityManager->flush();
     }
