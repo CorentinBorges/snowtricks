@@ -1,0 +1,21 @@
+
+<div class="modal-body justify-content-start text-left">
+
+    {{ form_start(imgForm) }}
+        {% if editUser is defined %}
+                {{ form_widget(imgForm) }}
+        {% else %}
+                {% set imageId=image.id %}
+                {{ form_row(imgForm.id, {"value" : image.id})}}
+                {{ form_row(imgForm.name, {"value" : image.name})}}
+                {{ form_row(imgForm.image) }}
+                {{ form_row(imgForm.alt,{"value" : image.alt}) }}
+                {% if image.first == true %}
+                    {{ form_row(imgForm.first, {'attr': {'checked':'checked'}}) }}
+                {% else %}
+                    {{ form_row(imgForm.first) }}
+                {% endif %}
+        {% endif %}
+        <button type="submit" class="btn btn-success " >Envoyer</button>
+    {{ form_end(imgForm) }}
+</div>

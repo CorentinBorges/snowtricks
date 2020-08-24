@@ -9,9 +9,9 @@
                 <div class="row mt-5 mb-5">
                     <div class="col-sm-2 col-md-4 col-12 justify-content-end text-right">
                         {% if user.avatarPath is not null %}
-                            <img class="col-12" src="{{ asset('images/avatars/' ~ user.avatarPath) }}"/>
+                            <img class="col-12" src="{{ asset('images/avatars/' ~ user.avatarPath) }}" alt="{{ user.avatarAlt }}"/>
                         {% else %}
-                            <img class="col-12" src="{{ asset('images/avatars/face.jpg') }}"/>
+                            <img class="col-12" src="{{ asset('images/avatars/face.jpg') }}" alt="un snowboarder"/>
                         {% endif %}
                         <button class="pr-3 mr-3 btn btn-primary justify-content-end" data-toggle="modal" data-target="#editPic"><i class="fas fa-pencil-alt"></i></button>
 
@@ -20,11 +20,8 @@
                                 <div class="modal-content ">
 
                                     <div class="modal-body justify-content-start text-left">
-                                        {{ form_start(imageForm) }}
-                                            {{ form_widget(imageForm) }}
-
-                                            <button class="btn btn-lg btn-primary mt-5" type="submit">Envoyer</button>
-                                        {{ form_end(imageForm) }}
+                                        {% set editUser=true %}
+                                        {{ include('form/__imageForm..html.twig') }}
                                     </div>
                                 </div>
                             </div>

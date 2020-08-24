@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{#todo:image mise en avant option#}
+
 {% block body %}
     <div class="container justify-content-center mt-5">
 
@@ -86,24 +86,8 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content ">
 
+                                                    {{ include('form/__imageForm..html.twig') }}
 
-                                                    {{ dump(image.first==true   ) }}
-                                                    <div class="modal-body justify-content-start text-left">
-                                                        {% set imageId=image.id %}
-                                                        {{ form_start(imgForm) }}
-                                                            {{ form_row(imgForm.id, {"value" : image.id})}}
-                                                            {{ form_row(imgForm.name, {"value" : image.name})}}
-                                                            {{ form_row(imgForm.image) }}
-                                                            {{ form_row(imgForm.alt,{"value" : image.alt}) }}
-                                                        {#todo: ask karim pourquoi ca marche pas le ckecked#}
-                                                        {% if image.first == true %}
-                                                            {{ form_row(imgForm.first, {'attr': {'checked':'checked'}}) }}
-                                                        {% else %}
-                                                            {{ form_row(imgForm.first) }}
-                                                        {% endif %}
-                                                            <button type="submit" class="btn btn-success " >Envoyer</button>
-                                                        {{ form_end(imgForm) }}
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -114,34 +98,6 @@
 
                                 {% endfor %}
                             {% endif %}
-
-
-
-                                   {# {% set form= imageForm.createView %}
-                                    <div class="col-sm-4 col-12 mt-3">
-                                        <button data-toggle="modal" data-target="{{ "#edit" }}" >
-                                            <img class="col-sm-12" src="{{ asset('images/emptyImage.png') }}" alt="snow">
-                                        </button></br>
-
-
-                                        <div class="modal fade" id="{{ "edit"}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content ">
-
-                                                    <div class="modal-body justify-content-start text-left">
-
-                                                        {{ form_start(form) }}
-                                                        {{ form_row(form.image) }}
-
-                                                        {{ form_row(form.alt) }}
-                                                        {{ form_row(form.first) }}
-                                                        <button type="submit" class="btn btn-success " >Envoyer</button>
-                                                        {{ form_end(form) }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>#}
 
 
                             {% for video in trick.videos %}
@@ -158,11 +114,7 @@
                                                     <div class="modal-body justify-content-start text-left">
 
                                                         {% set videoId=video.id %}
-                                                        {{ form_start(vidForm) }}
-                                                            {{ form_row(vidForm.link) }}
-                                                            {{ form_row(vidForm.id,{"value" : videoId}) }}
-                                                            <button type="submit" class="btn btn-success " >Envoyer</button>
-                                                        {{ form_end(vidForm) }}
+                                                        {{ include('form/__videoForm..html.twig') }}
                                                     </div>
                                                 </div>
                                             </div>

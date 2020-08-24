@@ -78,6 +78,11 @@ class User implements UserInterface
      */
     private $tokens;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatarAlt;
+
 
 
     public function __construct()
@@ -253,6 +258,18 @@ class User implements UserInterface
                 $token->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatarAlt(): ?string
+    {
+        return $this->avatarAlt;
+    }
+
+    public function setAvatarAlt(?string $avatarAlt): self
+    {
+        $this->avatarAlt = $avatarAlt;
 
         return $this;
     }

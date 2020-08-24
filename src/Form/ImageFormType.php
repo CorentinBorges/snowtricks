@@ -5,16 +5,12 @@ namespace App\Form;
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\Length;
-use function Sodium\add;
 
 class ImageFormType extends AbstractType
 {
@@ -29,7 +25,7 @@ class ImageFormType extends AbstractType
                 ])
                 ->add('image',FileType::class,[
                     'data_class' => Image::class,
-                    'label'=>'Nouvelle image',
+                    'label'=>'Nouvelle image ( Laisser ce champ vide pour garder l\'image)',
                     'required'=>false,
                     'mapped'=>false,
                     'attr'=>[
@@ -77,8 +73,10 @@ class ImageFormType extends AbstractType
             ->add('alt',TextType::class,[
                 'label'=>"Champs alt"
                 ]
-            )
-            ->add('first', CheckboxType::class,[
+            );
+
+        if (!$options['is_user_edit']) {
+            $builder->add('first', CheckboxType::class,[
                 'attr'=>[
                     'class'=>'checkFirst mt-2',
                     'type'=>"radio",
@@ -87,10 +85,8 @@ class ImageFormType extends AbstractType
                 'label'=>'Image mise en avant',
                 'required'=>false,
 
-            ])
-           /* ->add('idImage',HiddenType::class,[
-                'mapped'=>false,
-            ])*/
+            ]);
+        }
 
         ;
 
@@ -103,7 +99,9 @@ class ImageFormType extends AbstractType
             ->setDefaults([
             'data_class' => Image::class,
             'is_edit' => false,
+            'is_user_edit' => false,
         ]);
         $resolver->setAllowedTypes('is_edit', "bool");
+        $resolver->setAllowedTypes('is_user_edit', "bool");
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Image;
 use App\Entity\User;
 use App\Form\ImageFormType;
 use App\Repository\UserRepository;
@@ -19,12 +20,13 @@ class AdminController extends AbstractController
     {
         /** @var  User $user */
         $user = $this->getUser();
-        $imageForm = $this->createForm(ImageFormType::class);
+        $imageForm = $this->createForm(ImageFormType::class,null,['is_user_edit'=>true]);
 
         $imageForm->handleRequest($request);
-        if ($imageForm->isSubmitted()) {
-            $image = $imageForm['image']->getData();
-            $userRepository->editAvatar($image, $user);
+        if ($imageForm->isSubmitted() && $imageForm->isValid()) {
+            $image=$imageForm->getData();
+            $imageFile = $imageForm['image']->getData();
+            $userRepository->editAvatar($image,$imageFile, $user);
             return $this->redirectToRoute('admin_user_edit');
         }
 
@@ -44,10 +46,9 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_user_edit');
         }
 
-
         return $this->render('admin/editUser.html.twig', [
             'user'=>$user,
-            'imageForm' => $imageForm->createView(),
+            'imgForm' => $imageForm->createView(),
         ]);
     }
 }
