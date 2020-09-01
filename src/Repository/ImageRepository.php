@@ -34,21 +34,6 @@ class ImageRepository extends BaseRepository
         $this->filesystem = $filesystem;
     }
 
-
-
-    public function createImage(UploadedFile $uploadedFile,$formImageName,$figure)
-    {
-
-        $image = new Image();
-        $imageName = uniqid() . $formImageName;
-        $image->setName($imageName)
-            ->setFigure($figure)
-            ->setFirst('false');
-        $this->entityManager->persist($image);
-        $this->entityManager->flush();
-        $uploadedFile->move('images/tricks/', $imageName);
-    }
-
     public function findFirst($figureId)
     {
         return $this->createQueryBuilder('i')
@@ -60,24 +45,7 @@ class ImageRepository extends BaseRepository
 
     }
 
-    /*public function createImages(FormInterface $form, Figure $figure)
-    {
-        for ($i=1;$i<=TrickFormType::NB_IMAGE;$i++) {
-            if (isset($form['image' . $i]) && !empty($form['image' . $i]->getData())) {
-                $image = new Image();
-                $imageName = uniqid() . $form['image' . $i]->getData()->getClientOriginalName();
-                $image
-                    ->setName($imageName)
-                    ->setFigure($figure)
-                    ->setFirst($i == 1);
 
-                $this->entityManager->persist($image);
-                @var  $file File
-                $file = $form['image' . $i]->getData();
-                $file->move('images/tricks/', $imageName);
-            }
-        }
-    }*/
 
     public function editImage(Figure $figure,Image $newImage)
     {

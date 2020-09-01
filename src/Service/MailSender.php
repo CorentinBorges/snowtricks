@@ -44,7 +44,7 @@ class MailSender
                     <p>Veuillez confirmer votre inscription en cliquant sur 
                     <a href="https://' . $this->request->server->get('HTTP_HOST') . '/confirmation/' . $tokenName . '"> Ce lien</a>
                     </p> <br>
-                    <strong>⚠️ Le lien n\'est actif que 5 jours</strong>';
+                    <strong>⚠️ Le lien n\'est actif que 2 jours</strong>';
             $subject = "Snowtricks: Confirmation d'inscription";
         }
         else if ($messageType===self::RESET_PASS) {
@@ -53,7 +53,7 @@ class MailSender
                     <p>Pour réinitialiser votre mot de passe, veuillez cliquer sur 
                     <a href="https://' . $this->request->server->get('HTTP_HOST') . '/newPass/' . $tokenName . '"> Ce lien</a>
                     </p> <br>
-                    <strong>⚠️ Le lien n\'est actif que 5 jours</strong>';
+                    <strong>⚠️ Le lien n\'est actif que 2 jours</strong>';
             $subject = "Snowtricks: Réinitialisation du mot de passe";
 
         }

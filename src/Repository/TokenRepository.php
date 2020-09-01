@@ -31,7 +31,7 @@ class TokenRepository extends ServiceEntityRepository
     {
         $now = new \DateTime();
         $time = new \DateTime();
-        $expireTime = $time->modify('+5 days');
+        $expireTime = $time->modify('+2 days');
         $token
             ->setName(uniqid() . uniqid())
             ->setUser($user)
