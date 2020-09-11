@@ -38,7 +38,7 @@
 
                     {% if trick.findFirst is not null %}
                         <img src="{{ asset('images/tricks/' ~ trick.findFirst.name) }}" class="card-img-top" alt="{{ trick.findFirst.alt }}">
-                    {% elseif trick.findFirst is null and trick.images is not null %}
+                    {% elseif trick.findFirst is null and trick.images is not empty %}
                         <img src="{{ asset('images/tricks/' ~ trick.createFirst) }}" class="card-img-top" alt="Snowboard dans la neige">
                     {% else %}
                         <img src="{{ asset('images/trick1.jpg') }}" class="card-img-top" alt="Snowboard dans la neige">

@@ -10,5 +10,4 @@ Vagrantfile
 /public/bundles/
 /var/
 /vendor/
-/src/DataFixtures
 ###< symfony/framework-bundle ###
