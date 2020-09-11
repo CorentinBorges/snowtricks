@@ -18,7 +18,10 @@ class VideoFixtures extends Fixture
     private static $videos = [
         'https://www.youtube.com/embed/tHHxTHZwFUw',
         'https://www.youtube.com/embed/G9qlTInKbNE',
-        'https://www.youtube.com/embed/1MQfbMoCfb4'
+        'https://www.youtube.com/embed/1MQfbMoCfb4',
+        'https://www.youtube.com/embed/AzJPhQdTRQQ',
+        'https://www.youtube.com/embed/SQyTWk7OxSI'
+
     ];
 
     public function load(ObjectManager $manager)
@@ -26,11 +29,11 @@ class VideoFixtures extends Fixture
         $this->faker = Factory::create();
         for ($i = 0; $i < 20; $i++) {
             $video = new Video();
-            $video->setLink($this->faker->randomElement(self::$videos));
-            $video->setFigure($this->getReference(Figure::class . '_' . $this->faker->numberBetween(0, 9)));
+            $video
+                ->setLink($this->faker->randomElement(self::$videos))
+                ->setFigure($this->getReference(Figure::class . '_' . $this->faker->numberBetween(0, 9)));
             $manager->persist($video);
         }
-
         $manager->flush();
     }
 

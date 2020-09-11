@@ -19,15 +19,15 @@ class MessageFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $this->faker = Factory::create();
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $message = new Message();
-            $message->setContent($this->faker->text(200));
-            $message->setFigure($this->getReference(Figure::class . '_' . $this->faker->numberBetween(0, 9)));
-            $message->setUser($this->getReference(User::class . '_' . $this->faker->numberBetween(0, 9)))
+            $message
+                ->setContent($this->faker->text(200))
+                ->setFigure($this->getReference(Figure::class . '_' . $this->faker->numberBetween(0, 9)))
+                ->setUser($this->getReference(User::class . '_' . $this->faker->numberBetween(0, 9)))
                 ->setCreatedAt($this->faker->dateTimeBetween("-300 days", "-1 days"));
             $manager->persist($message);
         }
-
         $manager->flush();
     }
 

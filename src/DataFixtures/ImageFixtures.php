@@ -11,36 +11,64 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
 
-class ImageFixtures extends Fixture implements DependentFixtureInterface
+class ImageFixtures extends GlobalFixture implements DependentFixtureInterface
 {
     /** @var Generator */
     private $faker;
 
-    private static $tricksName = [
-        'mute.jpg',
+
+
+    private static $randomImages = [
+        'jump1.jpg',
         'trick1.jpg',
         'trick2.jpg'];
 
-    private $firstExist = [];
-
-    private $imageRepository;
 
     public function load(ObjectManager $manager)
     {
         $this->faker = Factory::create();
+        $this->generateRandomPics($manager);
+        $this->generateMainPics($manager);
+        $manager->flush();
+    }
+
+    public function generateMainPics(ObjectManager $manager)
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $imagesNames = $this->figureNameGenerator();
+
+            if ($i !== 4) {
+                $image = new Image();
+                $image
+                    ->setName($imagesNames[$i])
+                    ->setFigure($this->getReference(Figure::class . '_' . $i))
+                    ->setAlt($this->faker->sentence($nbWords = 20, $variableNbWords = true))
+                    ->setFirst(true);
+                $manager->persist($image);
+            }
+        }
+    }
+
+    public function figureNameGenerator()
+    {
+        $imagesNames = [];
+        foreach ($this->figureNames as $figureName) {
+            $noSpace=str_replace(' ', '_', $figureName);
+            $imagesNames[] = strtolower($noSpace) . ".jpg";
+        }
+        return $imagesNames;
+    }
+
+    public function generateRandomPics(ObjectManager $manager)
+    {
         $trickNumber = 0;
         for ($i = 0; $i < 30; $i++) {
-
             $image = new Image();
-            $image->setName($this->faker->randomElement(self::$tricksName));
-            $image->setFigure($this->getReference(Figure::class . '_' . $trickNumber));
-            if (in_array($image->getFigure()->getId(),$this->firstExist)) {
-                $image->setFirst(false);
-            }
-            else{
-                $image->setFirst(true);
-                $this->firstExist[] = $image->getFigure()->getId();
-            }
+            $image
+                ->setName($this->faker->randomElement(self::$randomImages))
+                ->setFigure($this->getReference(Figure::class . '_' . $trickNumber))
+                ->setAlt($this->faker->sentence($nbWords = 20, $variableNbWords = true))
+                ->setFirst(false);
             $trickNumber=$trickNumber+1;
 
             if ($trickNumber==10) {
@@ -48,8 +76,6 @@ class ImageFixtures extends Fixture implements DependentFixtureInterface
             }
             $manager->persist($image);
         }
-
-        $manager->flush();
     }
 
     public function getDependencies()

@@ -11,31 +11,6 @@ use Faker\Generator;
 
 class FigureFixtures extends GlobalFixture
 {
-    protected $groupes = [
-        'Grabs',
-        'Rotation',
-        'Old school',
-        'Flips',
-        'Rotation',
-        'Rotation',
-        'Grabs',
-        'Old school',
-        'Slide',
-        'Grabs'
-    ];
-
-    protected $names=[
-        'Mute',
-        '1080',
-        'Backside air',
-        'Front Flip',
-        '360',
-        '540',
-        'Stalefish',
-        'Japan air',
-        'Slide',
-        'Indy'
-    ];
 
     /** @var Generator **/
     protected $faker;
@@ -46,7 +21,7 @@ class FigureFixtures extends GlobalFixture
         for ($i = 0; $i < 10; $i++) {
             $figure = new Figure();
             $figure
-                ->setName($this->names[$i])
+                ->setName($this->figureNames[$i])
                 ->setDescription($this->faker->paragraph($nbSentences = 20, $variableNbSentences = true))
                 ->setGroupe($this->groupes[$i])
                 ->setCreatedAt($this->faker->dateTimeBetween("-100 days", "-80 days"))

@@ -39,11 +39,15 @@ class UserFixtures extends Fixture
         $this->faker = Factory::create();
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
-            $user->setUsername($this->faker->name)
+            $user
+                ->setUsername($this->faker->name)
                 ->setRoles(['ROLE_ADMIN'])
-                ->setPassword($this->encoder->encodePassword($user,'coucou'))
+                ->setPassword($this->encoder->encodePassword($user, 'snowPass'))
                 ->setEmail($this->faker->email)
-                ->setAvatarPath($this->faker->randomElement(self::$avatars));
+                ->setAvatarPath($this->faker->randomElement(self::$avatars))
+                ->setAvatarAlt($this->faker->sentence($nbWords = 20, $variableNbWords = true))
+                ->setIsValid(true);
+
             $this->setReference(User::class.'_'.$i,$user);
             $manager->persist($user);
         }
