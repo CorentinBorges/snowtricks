@@ -15,6 +15,7 @@ use App\Repository\MessageRepository;
 use App\Repository\VideoRepository;
 use App\Service\AvatarFileUploader;
 use App\Service\FileUploader;
+use App\Service\FormRegister;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +25,11 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class AdminTricksController
+ * @package App\Controller
+ * @IsGranted("ROLE_ADMIN")
+ */
 class AdminTricksController extends AbstractController
 {
     /**
@@ -37,35 +43,12 @@ class AdminTricksController extends AbstractController
      * @param FigureRepository $figureRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function add(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader)
+    public function add(Request $request, FormRegister $formRegister)
     {
         $form = $this->createForm(TrickFormType::class);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Figure $figure */
-            $figure = $form->getData();
-            $images=$form->get('images');
-            $videos = $form['videos']->getData();
-            foreach ($videos as $video) {
-                /** @var Video $video */
-                $entityManager->persist($video);
-            }
-            foreach ($images as $image) {
-                $imageFile=$image->get('image')->getData();
-                $imageFileName=$fileUploader->upload($imageFile);
-                $image=$image->getData();
-                /** @var Image $image */
-                $image->setName($imageFileName);
-                $entityManager->persist($image);
-            }
-
-            $figure->setCreatedAtNow();
-            $entityManager->persist($figure);
-            $entityManager->flush();
-            $this->addFlash("success","Yes !!! Votre trick à bien été ajouté !! ❄❄❄");
-            return $this->redirectToRoute('app_homepage');
-
+            $formRegister->trickCreator($form->getData(),$form->get('images'),$form['videos']->getData(),$request);
         }
 
         return $this->render('admin_tricks/new.html.twig', [
