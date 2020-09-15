@@ -4,8 +4,9 @@
 namespace App\Service;
 
 
-use http\Exception\InvalidArgumentException;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -32,8 +33,6 @@ class MailSender
         $this->mailer = $mailer;
         $this->request = $request;
     }
-
-
 
 
     public function sendMail(string $to,string $tokenName,int $messageType)
@@ -67,7 +66,10 @@ class MailSender
             ->subject($subject)
             ->text('Mail de confirmation')
             ->html($message);
-
-        $this->mailer->send($email);
+        try {
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface $e) {
+            throw new Exception("Echec de l'envoie");
+        }
     }
 }

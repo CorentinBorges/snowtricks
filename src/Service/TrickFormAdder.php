@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 
-class FormRegister
+class TrickFormAdder
 {
 
     /**
@@ -57,7 +57,7 @@ class FormRegister
         $figure->setCreatedAtNow();
         $this->entityManager->persist($figure);
         $this->entityManager->flush();
-        $this->redirectTo($request,'/',"success","Yes !!! Votre trick à bien été ajouté !! ❄❄❄");
+        $this->flashBag->add("success", "Yes !!! Votre trick à bien été ajouté !! ❄❄❄");
     }
 
     public function imageCreator($imageForm)
@@ -70,14 +70,4 @@ class FormRegister
         $this->entityManager->persist($image);
     }
 
-    public function redirectTo(Request $request,string $route,string $flashType=null,string $flashMessage=null)
-    {
-        if ($flashType && $flashMessage) {
-            $this->flashBag->add($flashType,$flashMessage);
-        }
-        if (($flashType == null && $flashMessage !== null) || ($flashType !== null && $flashMessage == null)) {
-            throw new Exception('You need to indicate a message AND a type if you want a flash');
-        }
-        return $this->redirectController->urlRedirectAction($request,$route);
-    }
 }

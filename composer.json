@@ -7,6 +7,9 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "fzaninotto/faker": "^1.9",
+        "guzzlehttp/guzzle": "^7.0",
+        "rackspace/php-opencloud": "dev-master",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "5.1.*",
         "symfony/console": "5.1.*",
@@ -26,6 +29,9 @@
         "symfony/yaml": "5.1.*"
     },
     "require-dev": {
+        "symfony/browser-kit": "5.1.*",
+        "symfony/css-selector": "5.1.*",
+        "symfony/phpunit-bridge": "^5.1",
         "symfony/profiler-pack": "^1.0"
     },
     "config": {
