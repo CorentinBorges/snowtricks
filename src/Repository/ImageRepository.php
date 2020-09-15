@@ -4,16 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Figure;
 use App\Entity\Image;
-use App\Entity\Video;
-use App\Form\TrickFormType;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Node\Scalar\String_;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 /**
  * @method Image|null find($id, $lockMode = null, $lockVersion = null)
@@ -42,12 +36,9 @@ class ImageRepository extends BaseRepository
             ->setParameter('val', $figureId)
             ->getQuery()
             ->getOneOrNullResult();
-
     }
 
-
-
-    public function editImage(Figure $figure,Image $newImage)
+    public function editChangeImage(Figure $figure,Image $newImage)
     {
         $image = $this->findOneBy(["id" => $newImage->getId()]);
         if ($newImage->getFirst()) {

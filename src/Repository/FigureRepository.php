@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Figure;
+use App\Entity\Video;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Figure|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,7 +19,7 @@ class FigureRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Figure::class,$entityManager);
+        parent::__construct($registry, Figure::class, $entityManager);
     }
 
     public function findFirst($id)
