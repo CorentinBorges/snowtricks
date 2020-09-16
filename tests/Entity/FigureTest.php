@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Tests\Entity;
-
 
 use App\Entity\Figure;
 use App\Entity\Image;
@@ -42,84 +40,96 @@ class FigureTest extends TestCase
     public function testSetAnsGetName()
     {
         $this->figure->setName('test');
-        $this->assertSame('test',$this->figure->getName());
+        $this->assertSame('test', $this->figure->getName());
     }
 
     public function testSetAnsGetDescription()
     {
-        $this->figure->setDescription('s et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla par');
-        $this->assertSame('s et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla par',$this->figure->getDescription());
+        $this->figure->setDescription('ad minima veniam, quis nostrum exercitat');
+        $this->assertSame('ad minima veniam, quis nostrum exercitat', $this->figure->getDescription());
     }
 
     public function testSetAnsGetGroupe()
     {
         $this->figure->setGroupe('test');
-        $this->assertSame('test',$this->figure->getGroupe());
+        $this->assertSame('test', $this->figure->getGroupe());
     }
 
     public function testGetAndSetCreatedAt()
     {
         $now = new \DateTime("now");
         $this->figure->setCreatedAt($now);
-        $this->assertEquals($now,$this->figure->getCreatedAt());
+        $this->assertEquals($now, $this->figure->getCreatedAt());
     }
 
     public function testGetAndSetModifiedAt()
     {
         $now = new \DateTime("now");
         $this->figure->setModifiedAt($now);
-        $this->assertEquals($now,$this->figure->getModifiedAt());
+        $this->assertEquals($now, $this->figure->getModifiedAt());
     }
 
     public function testGetAndAddMessages()
     {
         $this->figure->addMessage($this->message);
-        $this->assertContains($this->message,$this->figure->getMessages(),'Message not found');
+        $this->assertContains($this->message, $this->figure->getMessages(), 'Message not found');
     }
 
+
+    /**
+     * @depends testGetAndAddMessages
+     *
+     */
     public function testRemoveMessage()
     {
         $this->figure->addMessage($this->message);
         $this->figure->removeMessage($this->message);
-        $this->assertNotContains($this->message,$this->figure->getMessages(),'Message has not been removed');
+        $this->assertNotContains($this->message, $this->figure->getMessages(), 'Message has not been removed');
     }
 
     public function testGetAndAddImages()
     {
         $this->figure->addImage($this->image);
-        $this->assertContains($this->image,$this->figure->getImages(),'Image not found');
-    }
-
-    public function testRemoveImage()
-    {
-        $this->figure->addImage($this->image);
-        $this->figure->removeImage($this->image);
-        $this->assertNotContains($this->image,$this->figure->getImages(),'Image has not been removed');
-    }
-
-    public function testGetAndAddVideos()
-    {
-        $this->figure->addVideo($this->video);
-        $this->assertContains($this->video,$this->figure->getVideos(),'Video not found');
-    }
-
-    public function testRemoveVideo()
-    {
-        $this->figure->addVideo($this->video);
-        $this->figure->removeVideo($this->video);
-        $this->assertNotContains($this->video,$this->figure->getVideos(),'Video has not been removed');
+        $this->assertContains($this->image, $this->figure->getImages(), 'Image not found');
     }
 
     /**
      * @depends testGetAndAddImages
      *
-     * todo: show image test for namespace
+     */
+    public function testRemoveImage()
+    {
+        $this->figure->addImage($this->image);
+        $this->figure->removeImage($this->image);
+        $this->assertNotContains($this->image, $this->figure->getImages(), 'Image has not been removed');
+    }
+
+    public function testGetAndAddVideos()
+    {
+        $this->figure->addVideo($this->video);
+        $this->assertContains($this->video, $this->figure->getVideos(), 'Video not found');
+    }
+
+    /**
+     * @depends testGetAndAddVideos
+     *
+     */
+    public function testRemoveVideo()
+    {
+        $this->figure->addVideo($this->video);
+        $this->figure->removeVideo($this->video);
+        $this->assertNotContains($this->video, $this->figure->getVideos(), 'Video has not been removed');
+    }
+
+    /**
+     * @depends testGetAndAddImages
+     *
      */
     public function testFindFirst()
     {
         $this->image->setFirst(true);
         $this->figure->addImage($this->image);
-        $this->assertSame($this->image,$this->figure->findFirst());
+        $this->assertSame($this->image, $this->figure->findFirst());
     }
 
     public function testCreatedAtNow()
@@ -133,5 +143,4 @@ class FigureTest extends TestCase
         $this->figure->setModifiedAtNow();
         $this->assertTrue($this->figure->getModifiedAt() instanceof \DateTime);
     }
-
 }

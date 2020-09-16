@@ -1,25 +1,16 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
-<container xmlns="http://symfony.com/schema/dic/services"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
 
-    <!--
-    <parameters>
-        <parameter key="acme.demo.example.class">Acme\DemoBundle\Example</parameter>
-    </parameters>
+    <rule ref="PSR12"/>
+    <rule ref="PSR1"/>
+    <file>src/</file>
 
-    <services>
-        <service id="acme.demo.example" class="%acme.demo.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
-            <call method="setService">
-                <argument type="service" id="service_id" />
-            </call>
-            <tag name="twig.extension" />
-            <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
-        </service>
-    </services>
-    -->
-</container>
+    <exclude-pattern>*/src/DoctrineMigrations/*</exclude-pattern>
+    <exclude-pattern>*/src/Kernel.php</exclude-pattern>
+</ruleset>

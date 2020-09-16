@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Video
 {
-    const YOUTUBE_LINK = "https://www.youtube.com/embed/";
+    public const YOUTUBE_LINK = "https://www.youtube.com/embed/";
 
     /**
      * @ORM\Id()

@@ -47,7 +47,7 @@ class Image
         return $this->id;
     }
 
-    public function setId( $id): self
+    public function setId($id): self
     {
         $this->id = $id;
 
@@ -101,6 +101,4 @@ class Image
 
         return $this;
     }
-
-
 }
