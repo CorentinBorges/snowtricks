@@ -9,8 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -58,12 +62,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function createUser(User $user,string $role, UserPasswordEncoderInterface $passwordEncoder, FormInterface $form)
+    {
+        $user
+            ->setRoles([$role])
+            ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
+            ->setIsValid(false);
+        return $user;
+    }
+
     public function editUser(User $user,Request $request)
     {
         $user->setUsername($request->request->get('username'));
         $user->setEmail($request->request->get('email'));
         $this->manager->persist($user);
         $this->manager->flush();
+
     }
 
     public function editAvatar(Image $image,$imageFile,User $user)

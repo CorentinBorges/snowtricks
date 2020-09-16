@@ -244,15 +244,6 @@ class Figure
         return null;
     }
 
-    public function createFirst()
-    {
-        $images = $this->getImages();
-        foreach ($images as $image) {
-                return $image->getName();
-        }
-    }
-
-
     public function setCreatedAtNow()
     {
         $now = new \DateTime("now");

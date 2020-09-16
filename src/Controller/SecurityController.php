@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -50,22 +51,27 @@ class SecurityController extends AbstractController
     /**
      * @param EntityManagerInterface $entityManager
      * @param Request $request
+     * @param UserPasswordEncoder $passwordEncoder
+     * @param MailerInterface $mailer
+     * @param TokenRepository $tokenRepository
+     * @param UserRepository $userRepository
      * @return Response
      * @Route("/signIn",name="app_signIn")
      */
-    public function register(EntityManagerInterface $entityManager,Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer,TokenRepository $tokenRepository)
+    public function register(EntityManagerInterface $entityManager,Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer,TokenRepository $tokenRepository,UserRepository $userRepository)
     {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $form->getData();
-            $user
-                ->setRoles(['ROLE_ADMIN'])
-                ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
-                ->setIsValid(false);
+            $userRepository->createUser($user, 'ROLE_ADMIN', $passwordEncoder, $form);
+//            $user
+//                ->setRoles(['ROLE_ADMIN'])
+//                ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
+//                ->setIsValid(false);
+//            $entityManager->persist($user);
             $entityManager->persist($user);
-
             $token = new Token();
             $tokenRepository->createTokenInDatabase($user,$token);
 
