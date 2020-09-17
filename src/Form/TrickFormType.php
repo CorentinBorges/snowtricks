@@ -14,8 +14,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TrickFormType extends AbstractType
 {
-    const NB_IMAGE = 4;
-    const NB_VIDEO = 3;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -25,16 +24,14 @@ class TrickFormType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                             'message' => 'Vous devez indiquer un nom de figure'
-                        ]
-                    )],
+                        ])],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description *',
                 'constraints' => [
                     new NotBlank([
                             'message' => 'Vous devez ajouter une description'
-                        ]
-                    )],
+                        ])],
             ])
             ->add('groupe', ChoiceType::class, [
                 'label' => 'Groupe *',
@@ -47,22 +44,21 @@ class TrickFormType extends AbstractType
                 ]
             ]);
         if ($options['is_edit']) {
-           $builder ->add('images', CollectionType::class, [
+            $builder ->add('images', CollectionType::class, [
                 'entry_type' => ImageFormType::class,
                 'entry_options' => ['label' => false],
                 'mapped' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true]);
-            $builder->add('videos',CollectionType::class,[
-                'entry_type'=>VideoFormType::class,
+            $builder->add('videos', CollectionType::class, [
+                'entry_type' => VideoFormType::class,
                 'mapped' => false,
-                'allow_add'=>true,
-                'allow_delete'=>true,
-                'prototype'=>true
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true
             ]);
-        }
-        else{
+        } else {
             $builder
                 ->add('images', CollectionType::class, [
                     'entry_type' => ImageFormType::class,
@@ -70,14 +66,13 @@ class TrickFormType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true,
                     'prototype' => true]);
-            $builder->add('videos',CollectionType::class,[
-                'entry_type'=>VideoFormType::class,
-                'allow_add'=>true,
-                'allow_delete'=>true,
-                'prototype'=>true
+            $builder->add('videos', CollectionType::class, [
+                'entry_type' => VideoFormType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true
             ]);
         }
-
     }
 
 

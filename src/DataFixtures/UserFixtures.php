@@ -1,15 +1,5 @@
 <?php
 
-/**
- * User Fixtures
- * PHP version 7.4
- *
- * @category Fixtures
- * @package  App\DataFixtures
- * @author   Corentin Borges <corentin1309@gmail.com>
- * @license  https://opensource.org/licenses/MIT MIT License
- * @link     https://github.com/CorentinBorges/snowtricks
- */
 namespace App\DataFixtures;
 
 use App\Entity\User;
@@ -19,7 +9,6 @@ use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
 
 /**
  * Class UserFixtures
@@ -37,11 +26,11 @@ class UserFixtures extends Fixture
      *
      * @var Generator $_faker
      */
-    private $_faker;
+    private $faker;
 
 
 
-    private static $_avatars = [
+    private static $avatars = [
         'face.jpg',
         'face2.jpg',
         'face3.jpg',
@@ -54,7 +43,7 @@ class UserFixtures extends Fixture
      *
      * @var PasswordEncoderInterface
      */
-    private $_encoder;
+    private $encoder;
 
 
     /**
@@ -66,7 +55,7 @@ class UserFixtures extends Fixture
      */
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
-        $this->_encoder = $encoder;
+        $this->encoder = $encoder;
     }
 
     /**
@@ -78,23 +67,22 @@ class UserFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $this->_faker = Factory::create();
+        $this->faker = Factory::create();
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
             $user
-                ->setUsername($this->_faker->name)
+                ->setUsername($this->faker->name)
                 ->setRoles(['ROLE_ADMIN'])
-                ->setPassword($this->_encoder->encodePassword($user, 'snowPass'))
-                ->setEmail($this->_faker->email)
-                ->setAvatarPath($this->_faker->randomElement(self::$_avatars))
-                ->setAvatarAlt($this->_faker->sentence($nbWords = 20, $variableNbWords = true))
+                ->setPassword($this->encoder->encodePassword($user, 'snowPass'))
+                ->setEmail($this->faker->email)
+                ->setAvatarPath($this->faker->randomElement(self::$avatars))
+                ->setAvatarAlt($this->faker->sentence($nbWords = 20, $variableNbWords = true))
                 ->setIsValid(true);
 
-            $this->setReference(User::class.'_'.$i, $user);
+            $this->setReference(User::class . '_' . $i, $user);
             $manager->persist($user);
         }
 
         $manager->flush();
     }
-
 }

@@ -19,23 +19,23 @@ class ImageFormType extends AbstractType
 
         if ($options['is_edit']) {
             $builder
-                ->add('id',HiddenType::class,[
+                ->add('id', HiddenType::class, [
                 ])
-                ->add('name',HiddenType::class,[
+                ->add('name', HiddenType::class, [
                 ])
-                ->add('image',FileType::class,[
+                ->add('image', FileType::class, [
                     'data_class' => Image::class,
-                    'label'=>'Nouvelle image ( Laisser ce champ vide pour garder l\'image)',
-                    'required'=>false,
-                    'mapped'=>false,
-                    'attr'=>[
+                    'label' => 'Nouvelle image ( Laisser ce champ vide pour garder l\'image)',
+                    'required' => false,
+                    'mapped' => false,
+                    'attr' => [
                         'accept' => "image/png, image/jpeg",
                         'custom-file-label' => 'charger',
                     ],
-                    'constraints'=>[
+                    'constraints' => [
                         new File([
                             'maxSize' => '200M',
-                            'mimeTypes'=>[
+                            'mimeTypes' => [
                                 'image/jpeg',
                                 'image/png'
                             ],
@@ -43,23 +43,21 @@ class ImageFormType extends AbstractType
                         ])
                     ]
                 ]);
-        }
-
-        else{
+        } else {
             $builder
-                ->add('image',FileType::class,[
+                ->add('image', FileType::class, [
                     'data_class' => Image::class,
-                    'label'=>'Nouvelle image',
-                    'required'=>true,
-                    'mapped'=>false,
-                    'attr'=>[
+                    'label' => 'Nouvelle image',
+                    'required' => true,
+                    'mapped' => false,
+                    'attr' => [
                         'accept' => "image/png, image/jpeg",
                         'custom-file-label' => 'charger',
                     ],
-                    'constraints'=>[
+                    'constraints' => [
                         new File([
                             'maxSize' => '200M',
-                            'mimeTypes'=>[
+                            'mimeTypes' => [
                                 'image/jpeg',
                                 'image/png'
                             ],
@@ -70,27 +68,24 @@ class ImageFormType extends AbstractType
         }
 
         $builder
-            ->add('alt',TextType::class,[
-                'label'=>"Champs alt"
-                ]
-            );
+            ->add('alt', TextType::class, [
+                'label' => "Champs alt"
+                ]);
 
         if (!$options['is_user_edit']) {
-            $builder->add('first', CheckboxType::class,[
-                'attr'=>[
-                    'class'=>'checkFirst mt-2',
-                    'type'=>"radio",
-                    'checked'=>false
+            $builder->add('first', CheckboxType::class, [
+                'attr' => [
+                    'class' => 'checkFirst mt-2',
+                    'type' => "radio",
+                    'checked' => false
                 ],
-                'label'=>'Image mise en avant',
-                'required'=>false,
+                'label' => 'Image mise en avant',
+                'required' => false,
 
             ]);
         }
 
         ;
-
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -72,7 +72,6 @@ class Figure
         $this->messages = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
-
     }
 
     public function getId(): ?int
@@ -244,6 +243,14 @@ class Figure
         return null;
     }
 
+    public function createFirst()
+    {
+        $images = $this->getImages();
+        foreach ($images as $image) {
+            return $image->getName();
+        }
+    }
+
     public function setCreatedAtNow()
     {
         $now = new \DateTime("now");
@@ -255,5 +262,4 @@ class Figure
         $now = new \DateTime("now");
         $this->setModifiedAt($now);
     }
-
 }

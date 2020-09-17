@@ -17,42 +17,14 @@ use Symfony\Component\Form\FormInterface;
  */
 class VideoRepository extends BaseRepository
 {
-    const YOUTUBE_LINK = "https://www.youtube.com/embed/";
+    private const YOUTUBE_LINK = "https://www.youtube.com/embed/";
 
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Video::class,$entityManager);
+        parent::__construct($registry, Video::class, $entityManager);
     }
 
-    /*public function createVideo($figure,$link)
-    {
-        $video = new Video();
-        $linkArray = preg_split('#/#', $link);
-        $linkCode = $linkArray[3];
-        $video
-            ->setFigure($figure)
-            ->setLink(self::YOUTUBE_LINK.$linkCode);
-        $this->entityManager->persist($video);
-        $this->entityManager->flush();
-    }*/
-
-    /*public function createVideos(FormInterface $form, Figure $figure)
-    {
-        for ($n=1;$n<=TrickFormType::NB_VIDEO;$n++) {
-            if (isset($form['video'.$n]) &&  !empty($form['video'.$n]->getData())) {
-                $video = new Video();
-                $linkArray=preg_split('#/#',$form['video'.$n]->getData());
-                $linkCode = $linkArray[3];
-                $video
-                    ->setFigure($figure)
-                    ->setLink(self::YOUTUBE_LINK.$linkCode);
-
-                $this->entityManager->persist($video);
-            }
-        }
-    }*/
-
-    public function editVideo(int $videoId,Video $newVideo,Figure $figure)
+    public function editVideo(int $videoId, Video $newVideo, Figure $figure)
     {
         $video = $this->findOneBy(["id" => $videoId]);
         $video->setEmbedLink($newVideo->getLink());
@@ -70,7 +42,7 @@ class VideoRepository extends BaseRepository
 
     public function createLink($link)
     {
-        $linkArray=preg_split('#/#',$link);
+        $linkArray = preg_split('#/#', $link);
         $linkCode = $linkArray[3];
         return self::YOUTUBE_LINK . $linkCode;
     }

@@ -15,30 +15,30 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class UserRegistrationFormType extends AbstractType
 {
-    const PASS_MIN = 8;
-    const PASS_MAX = 50;
+    private const PASS_MIN = 8;
+    private const PASS_MAX = 50;
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class,[
-                'label'=>'Nom d\'utilisateur',
+            ->add('username', TextType::class, [
+                'label' => 'Nom d\'utilisateur',
             ])
             ->add('email', EmailType::class)
-            ->add('password',PasswordType::class,[
-                'mapped'=>false,
-                'required'=>true,
-                'label'=>'Mot de passe',
-                'constraints'=>[
+            ->add('password', PasswordType::class, [
+                'mapped' => false,
+                'required' => true,
+                'label' => 'Mot de passe',
+                'constraints' => [
                     new Length([
-                        "min"=>self::PASS_MIN,
-                        'minMessage'=>"Le mot de passe doit contenir au moins 8 caractères",
-                        "max"=>self::PASS_MAX,
+                        "min" => self::PASS_MIN,
+                        'minMessage' => "Le mot de passe doit contenir au moins 8 caractères",
+                        "max" => self::PASS_MAX,
                         "maxMessage" => "Le mot de passe ne peut pas contenir plus de 50 caractères"
                     ]),
 
                     new Regex([
-                    'pattern'=>'#[0-9]+#',
-                    'message'=>"Le mot de passe doit contenir au moins un chiffre "
+                    'pattern' => '#[0-9]+#',
+                    'message' => "Le mot de passe doit contenir au moins un chiffre "
                     ]),
 
                     new Regex([
@@ -52,12 +52,11 @@ class UserRegistrationFormType extends AbstractType
                     ]),
 
                     new NotBlank([
-                        'message'=>"Le champ mot de passe ne peut pas être vide"
+                        'message' => "Le champ mot de passe ne peut pas être vide"
                     ])
 
                 ]
             ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

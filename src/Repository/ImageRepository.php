@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Filesystem\Filesystem;
 
-
 /**
  * @method Image|null find($id, $lockMode = null, $lockVersion = null)
  * @method Image|null findOneBy(array $criteria, array $orderBy = null)
@@ -22,9 +21,12 @@ class ImageRepository extends BaseRepository
      */
     private $filesystem;
 
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager, Filesystem $filesystem)
-    {
-        parent::__construct($registry, Image::class,$entityManager);
+    public function __construct(
+        ManagerRegistry $registry,
+        EntityManagerInterface $entityManager,
+        Filesystem $filesystem
+    ) {
+        parent::__construct($registry, Image::class, $entityManager);
         $this->filesystem = $filesystem;
     }
 
@@ -38,16 +40,16 @@ class ImageRepository extends BaseRepository
             ->getOneOrNullResult();
     }
 
-    public function editChangeImage(Figure $figure,Image $newImage)
+    public function editChangeImage(Figure $figure, Image $newImage)
     {
         $image = $this->findOneBy(["id" => $newImage->getId()]);
         if ($newImage->getFirst()) {
-            if ($oldImgFirst=$this->findFirst($figure->getId())) {
+            if ($oldImgFirst = $this->findFirst($figure->getId())) {
                 /** @var Image $oldImgFirst */
                 $oldImgFirst->setFirst(false);
             }
         }
-        if ($image->getFirst() && ($newImage->getFirst()===false)) {
+        if ($image->getFirst() && ($newImage->getFirst() === false)) {
             $image->setFirst(false);
         }
         $image->setFirst($newImage->getFirst());
@@ -57,47 +59,19 @@ class ImageRepository extends BaseRepository
         $this->entityManager->flush();
     }
 
-    public function deletePicsFromTrick($trickId,Filesystem $filesystem)
+    public function deletePicsFromTrick($trickId, Filesystem $filesystem)
     {
         $tricksPics = $this->findBy(["figure" => $trickId]);
         foreach ($tricksPics as $trickPic) {
-            $filesystem->remove('images/tricks/'.$trickPic->getName());
+            $filesystem->remove('images/tricks/' . $trickPic->getName());
             $this->entityManager->remove($trickPic);
         }
     }
 
-    public function deletePic($id,Filesystem $filesystem)
+    public function deletePic($id, Filesystem $filesystem)
     {
         $pic = $this->findOneBy(["id" => $id,]);
-        $filesystem->remove('images/tricks/'.$pic->getName());
+        $filesystem->remove('images/tricks/' . $pic->getName());
         $this->deleteFromDatabase($pic);
     }
-    // /**
-    //  * @return Image[] Returns an array of Image objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Image
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

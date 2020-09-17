@@ -17,22 +17,22 @@ class ResetPassFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email',EmailType::class)
-            ->add('password',PasswordType::class,[
-                'mapped'=>false,
-                'required'=>true,
-                'label'=>'Mot de passe',
-                'constraints'=>[
+            ->add('email', EmailType::class)
+            ->add('password', PasswordType::class, [
+                'mapped' => false,
+                'required' => true,
+                'label' => 'Mot de passe',
+                'constraints' => [
                     new Length([
-                        "min"=>UserRegistrationFormType::PASS_MIN,
-                        'minMessage'=>"Le mot de passe doit contenir au moins 8 caractères",
-                        "max"=>UserRegistrationFormType::PASS_MAX,
+                        "min" => UserRegistrationFormType::PASS_MIN,
+                        'minMessage' => "Le mot de passe doit contenir au moins 8 caractères",
+                        "max" => UserRegistrationFormType::PASS_MAX,
                         "maxMessage" => "Le mot de passe ne peut pas contenir plus de 50 caractères"
                     ]),
 
                     new Regex([
-                        'pattern'=>'#[0-9]+#',
-                        'message'=>"Le mot de passe doit contenir au moins un chiffre "
+                        'pattern' => '#[0-9]+#',
+                        'message' => "Le mot de passe doit contenir au moins un chiffre "
                     ]),
 
                     new Regex([
@@ -46,7 +46,7 @@ class ResetPassFormType extends AbstractType
                     ]),
 
                     new NotBlank([
-                        'message'=>"Le champ mot de passe ne peut pas être vide"
+                        'message' => "Le champ mot de passe ne peut pas être vide"
                     ])
 
                 ]

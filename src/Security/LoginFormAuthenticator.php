@@ -31,8 +31,12 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
     private $csrfTokenManager;
     private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UrlGeneratorInterface $urlGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
@@ -76,8 +80,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
-        if(!$user->getIsValid()){
-            throw new CustomUserMessageAuthenticationException("Vous n'avez pas encore valider votre inscription par mail");
+        if (!$user->getIsValid()) {
+            throw new CustomUserMessageAuthenticationException(
+                "Vous n'avez pas encore valider votre inscription par mail"
+            );
         }
 
         return $user;
@@ -90,6 +96,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     * @param $credentials
+     * @return string|null
      */
     public function getPassword($credentials): ?string
     {
@@ -103,7 +111,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         }
 
         return new RedirectResponse($this->urlGenerator->generate('app_homepage'));
-
     }
 
     protected function getLoginUrl()

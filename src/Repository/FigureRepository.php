@@ -34,7 +34,7 @@ class FigureRepository extends BaseRepository
             ->getResult();
     }
 
-    public function createFigure($name,$description,$groupe): Figure
+    public function createFigure($name, $description, $groupe): Figure
     {
             $figure = new Figure();
 
@@ -49,38 +49,7 @@ class FigureRepository extends BaseRepository
 
     public function deleteTrick($id)
     {
-        $trick = $this->findOneBy(["id"=>$id]);
+        $trick = $this->findOneBy(["id" => $id]);
         $this->entityManager->remove($trick);
     }
-
-
-
-    // /**
-    //  * @return Figure[] Returns an array of Figure objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Figure
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

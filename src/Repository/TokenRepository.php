@@ -27,7 +27,7 @@ class TokenRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
-    public function createTokenInDatabase(User $user,Token $token)
+    public function createTokenInDatabase(User $user, Token $token)
     {
         $now = new \DateTime();
         $time = new \DateTime();
@@ -41,33 +41,4 @@ class TokenRepository extends ServiceEntityRepository
         $this->entityManager->persist($token);
         $this->entityManager->flush();
     }
-
-    // /**
-    //  * @return Token[] Returns an array of Token objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Token
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

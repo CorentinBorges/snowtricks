@@ -10,23 +10,14 @@
  * @license  https://opensource.org/licenses/MIT MIT License
  * @link     https://github.com/CorentinBorges/snowtricks
  */
+
 namespace App\DataFixtures;
 
 use App\Entity\Figure;
-
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
 
-/**
- * Class FigureFixtures
- *
- * @category Fixtures
- * @package  App\DataFixtures
- * @author   Corentin Borges <corentin1309@gmail.com>
- * @license  https://opensource.org/licenses/MIT MIT License
- * @link     https://github.com/CorentinBorges/snowtricks
- */
 class FigureFixtures extends GlobalFixture
 {
     /**

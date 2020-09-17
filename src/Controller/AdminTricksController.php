@@ -112,7 +112,7 @@ class AdminTricksController extends AbstractController
 
         $imageForm->handleRequest($request);
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-            $trickFormEditor->editChangeImage($imageForm, $request, $fileUploader, $imageRepository, $id, $figure);
+            $trickFormEditor->editChangeImage($imageForm, $fileUploader, $imageRepository,$figure);
             $this->addFlash('success', 'L\'image bien été modifiée !');
             return $this->redirectToRoute('admin_tricks_edit', ['id' => $id]);
         }
@@ -128,7 +128,6 @@ class AdminTricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $trickFormEditor->editFigureTrick(
                 $form,
-                $request,
                 $figureRepository,
                 $id,
                 $fileUploader,
@@ -152,6 +151,11 @@ class AdminTricksController extends AbstractController
 
     /**
      * @Route("tricks/delete/image/{id}",name="admin_image_delete")
+     * @param Image $image
+     * @param $id
+     * @param ImageRepository $imageRepository
+     * @param Filesystem $filesystem
+     * @return RedirectResponse
      */
     public function deletePic(Image $image, $id, ImageRepository $imageRepository, Filesystem $filesystem)
     {
@@ -164,6 +168,9 @@ class AdminTricksController extends AbstractController
 
     /**
      * @Route("tricks/delete/video/{id}",name="admin_video_delete")
+     * @param Video $video
+     * @param VideoRepository $videoRepository
+     * @return RedirectResponse
      */
     public function deleteVideo(Video $video, VideoRepository $videoRepository)
     {

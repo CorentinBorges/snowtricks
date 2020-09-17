@@ -10,8 +10,8 @@
  * @license  https://opensource.org/licenses/MIT MIT License
  * @link     https://github.com/CorentinBorges/snowtricks
  */
-namespace App\DataFixtures;
 
+namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -39,7 +39,7 @@ abstract class GlobalFixture extends Fixture
         'Grabs'
     ];
 
-    protected $figureNames=[
+    protected $figureNames = [
         'Mute',
         '1080',
         'Backside air',

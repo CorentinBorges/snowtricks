@@ -40,8 +40,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     private $fileUploader;
 
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager, Filesystem $filesystem, AvatarFileUploader $fileUploader)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager,
+        Filesystem $filesystem,
+        AvatarFileUploader $fileUploader
+    ) {
         parent::__construct($registry, User::class);
         $this->manager = $manager;
         $this->filesystem = $filesystem;
@@ -62,35 +66,36 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function createUser(User $user,string $role, UserPasswordEncoderInterface $passwordEncoder, FormInterface $form)
-    {
+    public function createUser(
+        User $user,
+        string $role,
+        UserPasswordEncoderInterface $passwordEncoder,
+        FormInterface $form
+    ) {
         $user
             ->setRoles([$role])
-            ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
+            ->setPassword($passwordEncoder->encodePassword($user, $form['password']->getData()))
             ->setIsValid(false);
         return $user;
     }
 
-    public function editUser(User $user,Request $request)
+    public function editUser(User $user, Request $request)
     {
         $user->setUsername($request->request->get('username'));
         $user->setEmail($request->request->get('email'));
         $this->manager->persist($user);
         $this->manager->flush();
-
     }
 
-    public function editAvatar(Image $image,$imageFile,User $user)
+    public function editAvatar(Image $image, $imageFile, User $user)
     {
         if ($user->getAvatarPath()) {
-            $this->filesystem->remove('images/avatars/'.$user->getAvatarPath());
+            $this->filesystem->remove('images/avatars/' . $user->getAvatarPath());
         }
-        $imageName=$this->fileUploader->upload($imageFile);
+        $imageName = $this->fileUploader->upload($imageFile);
         $user->setAvatarPath($imageName);
         $user->setAvatarAlt($image->getAlt());
         $this->manager->persist($user);
         $this->manager->flush();
     }
-
-
 }

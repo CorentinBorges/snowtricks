@@ -42,16 +42,16 @@ class Video
 
     public function setLink(string $link): self
     {
-        $linkArray=preg_split('#/#',$link);
+        $linkArray = preg_split('#/#', $link);
         $linkCode = $linkArray[3];
-        $this->link=self::YOUTUBE_LINK . $linkCode;
+        $this->link = self::YOUTUBE_LINK . $linkCode;
 
         return $this;
     }
 
     public function setEmbedLink($link)
     {
-        $this->link=$link;
+        $this->link = $link;
 
         return $this;
     }

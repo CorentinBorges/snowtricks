@@ -1,35 +1,14 @@
 <?php
 
-/**
- * Images Fixtures
- * PHP version 7.4
- *
- * @category Fixtures
- * @package  App\DataFixtures
- * @author   Corentin Borges <corentin1309@gmail.com>
- * @license  https://opensource.org/licenses/MIT MIT License
- * @link     https://github.com/CorentinBorges/snowtricks
- */
 namespace App\DataFixtures;
 
 use App\Entity\Figure;
 use App\Entity\Image;
-use App\Repository\ImageRepository;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
 
-/**
- * Class FigureFixtures
- *
- * @category Fixtures
- * @package  App\DataFixtures
- * @author   Corentin Borges <corentin1309@gmail.com>
- * @license  https://opensource.org/licenses/MIT MIT License
- * @link     https://github.com/CorentinBorges/snowtricks
- */
 class ImageFixtures extends GlobalFixture implements DependentFixtureInterface
 {
     /**
@@ -37,14 +16,14 @@ class ImageFixtures extends GlobalFixture implements DependentFixtureInterface
      *
      * @var Generator $_faker
      */
-    private $_faker;
+    private $faker;
 
     /**
      * Array of randome pictures
      *
      * @var string[]
      */
-    private static $_randomImages = [
+    private static $randomImages = [
         'jump1.jpg',
         'jump2.jpg',
         'jump3.jpg',
@@ -63,7 +42,7 @@ class ImageFixtures extends GlobalFixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $this->_faker = Factory::create();
+        $this->faker = Factory::create();
         $this->generateRandomPics($manager);
         $this->generateMainPics($manager);
         $manager->flush();
@@ -86,7 +65,7 @@ class ImageFixtures extends GlobalFixture implements DependentFixtureInterface
                 $image
                     ->setName($imagesNames[$i])
                     ->setFigure($this->getReference(Figure::class . '_' . $i))
-                    ->setAlt($this->_faker->sentence($nbWords = 20, $variableNbWords = true))
+                    ->setAlt($this->faker->sentence($nbWords = 20, $variableNbWords = true))
                     ->setFirst(true);
                 $manager->persist($image);
             }
@@ -102,7 +81,7 @@ class ImageFixtures extends GlobalFixture implements DependentFixtureInterface
     {
         $imagesNames = [];
         foreach ($this->figureNames as $figureName) {
-            $noSpace=str_replace(' ', '_', $figureName);
+            $noSpace = str_replace(' ', '_', $figureName);
             $imagesNames[] = strtolower($noSpace) . ".jpg";
         }
         return $imagesNames;
@@ -121,13 +100,13 @@ class ImageFixtures extends GlobalFixture implements DependentFixtureInterface
         for ($i = 0; $i < 30; $i++) {
             $image = new Image();
             $image
-                ->setName($this->_faker->randomElement(self::$_randomImages))
+                ->setName($this->faker->randomElement(self::$randomImages))
                 ->setFigure($this->getReference(Figure::class . '_' . $trickNumber))
-                ->setAlt($this->_faker->sentence($nbWords = 20, $variableNbWords = true))
+                ->setAlt($this->faker->sentence($nbWords = 20, $variableNbWords = true))
                 ->setFirst(false);
-            $trickNumber=$trickNumber+1;
+            $trickNumber = $trickNumber + 1;
 
-            if ($trickNumber==10) {
+            if ($trickNumber == 10) {
                 $trickNumber = 0;
             }
             $manager->persist($image);
