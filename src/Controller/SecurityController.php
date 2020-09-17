@@ -12,12 +12,12 @@ use App\Service\MailSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -25,6 +25,8 @@ class SecurityController extends AbstractController
 {
     /**
      * @Route("/login", name="app_login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -45,42 +47,47 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('This method can be blank - 
+        it will be intercepted by the logout key on your firewall.');
     }
 
     /**
      * @param EntityManagerInterface $entityManager
      * @param Request $request
-     * @param UserPasswordEncoder $passwordEncoder
+     * @param UserPasswordEncoderInterface $passwordEncoder
      * @param MailerInterface $mailer
      * @param TokenRepository $tokenRepository
      * @param UserRepository $userRepository
      * @return Response
      * @Route("/signIn",name="app_signIn")
      */
-    public function register(EntityManagerInterface $entityManager,Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer,TokenRepository $tokenRepository,UserRepository $userRepository)
-    {
+    public function register(
+        EntityManagerInterface $entityManager,
+        Request $request,
+        UserPasswordEncoderInterface $passwordEncoder,
+        MailerInterface $mailer,
+        TokenRepository $tokenRepository,
+        UserRepository $userRepository
+    ) {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $form->getData();
             $userRepository->createUser($user, 'ROLE_ADMIN', $passwordEncoder, $form);
-//            $user
-//                ->setRoles(['ROLE_ADMIN'])
-//                ->setPassword($passwordEncoder->encodePassword($user,$form['password']->getData()))
-//                ->setIsValid(false);
-//            $entityManager->persist($user);
             $entityManager->persist($user);
             $token = new Token();
-            $tokenRepository->createTokenInDatabase($user,$token);
+            $tokenRepository->createTokenInDatabase($user, $token);
 
-            $mailSender = new MailSender($mailer,$request);
-            $mailSender->sendMail($form['email']->getData(),$token->getName(),MailSender::CONFIRM_SIGN_IN);
+            $mailSender = new MailSender($mailer, $request);
+            $mailSender->sendMail($form['email']->getData(), $token->getName(), MailSender::CONFIRM_SIGN_IN);
 
-            $this->addFlash('success',"Un mail de confirmation vous à été envoyé à l'adresse ".$form['email']->getData());
+            $this->addFlash(
+                'success',
+                "Un mail de confirmation vous à été envoyé à l'adresse " . $form['email']->getData()
+            );
 
-           return $this->redirectToRoute('app_homepage');
+            return $this->redirectToRoute('app_homepage');
         }
 
         return $this->render('security/register.html.twig', [
@@ -96,11 +103,11 @@ class SecurityController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function confirmUser(Token $token,EntityManagerInterface $entityManager,Request $request)
+    public function confirmUser(Token $token, EntityManagerInterface $entityManager, Request $request)
     {
         $now = new \DateTime("now");
-        if ($token->getIsUsed() || $token->getExpiredAt()<$now) {
-          throw new NotFoundHttpException();
+        if ($token->getIsUsed() || $token->getExpiredAt() < $now) {
+            throw new NotFoundHttpException();
         }
 
         $user = $token->getUser();
@@ -113,26 +120,34 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/resetPass",name="app_reset_pass")
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param TokenRepository $tokenRepository
+     * @param MailerInterface $mailer
+     * @return RedirectResponse|Response
      */
-    public function forgotPassword(Request $request, UserRepository $userRepository,TokenRepository $tokenRepository,MailerInterface $mailer)
-    {
-            if ($request->request->has("username")) {
-                $username=$request->request->get("username");
-                if (!$userRepository->findOneBy(['username' => $username])){
-                    $this->addFlash("error","Cet utilisateur n'existe pas");
-                }
-                else{
-                    $user = $userRepository->findOneBy(['username' => $username]);
-                    $userMail = $user->getEmail();
+    public function forgotPassword(
+        Request $request,
+        UserRepository $userRepository,
+        TokenRepository $tokenRepository,
+        MailerInterface $mailer
+    ) {
+        if ($request->request->has("username")) {
+            $username = $request->request->get("username");
+            if (!$userRepository->findOneBy(['username' => $username])) {
+                $this->addFlash("error", "Cet utilisateur n'existe pas");
+            } else {
+                $user = $userRepository->findOneBy(['username' => $username]);
+                $userMail = $user->getEmail();
 
-                    $token = new Token();
-                    $tokenRepository->createTokenInDatabase($user,$token);
+                $token = new Token();
+                $tokenRepository->createTokenInDatabase($user, $token);
 
-                    $mailSender = new MailSender($mailer,$request);
-                    $mailSender->sendMail($userMail,$token->getName(),MailSender::RESET_PASS);
-                    return $this->redirectToRoute('app_confirm_send_pass');
-                }
+                $mailSender = new MailSender($mailer, $request);
+                $mailSender->sendMail($userMail, $token->getName(), MailSender::RESET_PASS);
+                return $this->redirectToRoute('app_confirm_send_pass');
             }
+        }
 
         return $this->render('security/resetPass.html.twig');
     }
@@ -148,10 +163,14 @@ class SecurityController extends AbstractController
     /**
      * @Route("/newPass/{name}")
      */
-    public function changePass(Token $token,Request $request,UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager)
-    {
+    public function changePass(
+        Token $token,
+        Request $request,
+        UserPasswordEncoderInterface $passwordEncoder,
+        EntityManagerInterface $entityManager
+    ) {
         $now = new \DateTime("now");
-        if ($token->getIsUsed() || $token->getExpiredAt()<$now = new \DateTime("now")) {
+        if ($token->getIsUsed() || $token->getExpiredAt() < $now = new \DateTime("now")) {
             throw new NotFoundHttpException("La page que vous demandez n'existe pas");
         }
 
@@ -160,22 +179,21 @@ class SecurityController extends AbstractController
         $user = $token->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form['email']->getData()==$user->getEmail()) {
+            if ($form['email']->getData() == $user->getEmail()) {
                 $token->setIsUsed(true);
                 $entityManager->persist($token);
                 $user->setPassword($passwordEncoder->encodePassword($user, $form['password']->getData()));
                 $entityManager->persist($user);
                 $entityManager->flush();
-                $this->addFlash("success","Votre mot de passe à été modifié!");
+                $this->addFlash("success", "Votre mot de passe à été modifié!");
                 return $this->redirectToRoute('app_homepage');
             } else {
                 $form->get('email')->addError(new FormError("Le mail indiqué est incorrect"));
             }
-
         }
 
-        return $this->render('security/changePass.html.twig',[
-            'passForm'=>$form->createView(),
+        return $this->render('security/changePass.html.twig', [
+            'passForm' => $form->createView(),
         ]);
     }
 }

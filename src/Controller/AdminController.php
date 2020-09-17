@@ -31,17 +31,20 @@ class AdminController extends AbstractController
      * @param UserRepository $userRepository
      * @return RedirectResponse|Response
      */
-    public function editUser(Request $request, CheckUserEdit $checkUserEdit, UserRepository $userRepository,EntityManagerInterface $entityManager)
-    {
+    public function editUser(
+        Request $request,
+        CheckUserEdit $checkUserEdit,
+        UserRepository $userRepository
+    ) {
         /** @var  User $user */
         $user = $this->getUser();
-        $imageForm = $this->createForm(ImageFormType::class,null,['is_user_edit'=>true]);
+        $imageForm = $this->createForm(ImageFormType::class, null, ['is_user_edit' => true]);
 
         $imageForm->handleRequest($request);
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-            $image=$imageForm->getData();
+            $image = $imageForm->getData();
             $imageFile = $imageForm['image']->getData();
-            $userRepository->editAvatar($image,$imageFile, $user);
+            $userRepository->editAvatar($image, $imageFile, $user);
             return $this->redirectToRoute('admin_user_edit');
         }
 
@@ -49,22 +52,20 @@ class AdminController extends AbstractController
             $username = $request->request->get('username');
             $email = $request->request->get('email');
             $token = $request->request->get('_csrf_token');
-            if ($checkUserEdit->isValid($user,$username,$email,$token)) {
+            if ($checkUserEdit->isValid($user, $username, $email, $token)) {
                 $userRepository->editUser($user, $request);
-                $this->addFlash("success","Vos modifications ont bien été enregistrée");
-            }
-            else{
+                $this->addFlash("success", "Vos modifications ont bien été enregistrée");
+            } else {
                 foreach ($checkUserEdit->getErrors() as $error) {
-                    $this->addFlash("error",$error);
+                    $this->addFlash("error", $error);
                 }
             }
             return $this->redirectToRoute('admin_user_edit');
         }
 
         return $this->render('admin/editUser.html.twig', [
-            'user'=>$user,
+            'user' => $user,
             'imgForm' => $imageForm->createView(),
         ]);
     }
-
 }
