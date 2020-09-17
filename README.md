@@ -1,6 +1,6 @@
 # SnowTricks Project
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9396381189da418d9e584fc9f98876d8)](https://app.codacy.com/manual/CorentinBorges/projet_5?utm_source=github.com&utm_medium=referral&utm_content=CorentinBorges/projet_5&utm_campaign=Badge_Grade_Dashboard)
+<a href="https://codeclimate.com/github/CorentinBorges/snowtricks/maintainability"><img src="https://api.codeclimate.com/v1/badges/41f82ca455bdf5dc12fd/maintainability" /></a>
 
 This is a blog for trick's lovers !
 

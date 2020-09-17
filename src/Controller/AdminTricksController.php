@@ -112,7 +112,7 @@ class AdminTricksController extends AbstractController
 
         $imageForm->handleRequest($request);
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-            $trickFormEditor->editChangeImage($imageForm, $fileUploader, $imageRepository,$figure);
+            $trickFormEditor->editChangeImage($imageForm, $fileUploader, $imageRepository, $figure);
             $this->addFlash('success', 'L\'image bien été modifiée !');
             return $this->redirectToRoute('admin_tricks_edit', ['id' => $id]);
         }
