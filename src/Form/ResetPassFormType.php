@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class ResetPassFormType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

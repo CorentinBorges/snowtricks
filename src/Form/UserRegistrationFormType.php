@@ -15,8 +15,8 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class UserRegistrationFormType extends AbstractType
 {
-    private const PASS_MIN = 8;
-    private const PASS_MAX = 50;
+    public const PASS_MIN = 8;
+    public const PASS_MAX = 50;
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

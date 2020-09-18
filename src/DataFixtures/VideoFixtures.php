@@ -20,11 +20,11 @@ class VideoFixtures extends Fixture
     private $faker;
 
     private static $videos = [
-        'https://www.youtube.com/embed/tHHxTHZwFUw',
-        'https://www.youtube.com/embed/G9qlTInKbNE',
-        'https://www.youtube.com/embed/1MQfbMoCfb4',
-        'https://www.youtube.com/embed/AzJPhQdTRQQ',
-        'https://www.youtube.com/embed/SQyTWk7OxSI'
+        'https://www.youtube.com/tHHxTHZwFUw',
+        'https://www.youtube.com/G9qlTInKbNE',
+        'https://www.youtube.com/1MQfbMoCfb4',
+        'https://www.youtube.com/AzJPhQdTRQQ',
+        'https://www.youtube.com/SQyTWk7OxSI'
 
     ];
 
