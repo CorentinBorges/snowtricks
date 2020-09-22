@@ -103,7 +103,7 @@
                             {% for video in trick.videos %}
                                 {% set vidForm= videoForm.createView %}
                                 <div>
-                                    <iframe class="mt-5 ml-3 ml-sm-5" src="{{ video.link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe class="mt-5 ml-3 ml-sm-5" src="{{ video.link }}" frameborder="0" allowfullscreen></iframe>
                                     <div class="  col-12 col-sm-12 justify-content-right text-right">
                                         <button class="pr-3  btn btn-primary" data-toggle="modal" data-target="{{ "#editVid" ~ video.id }}"><i class="fas fa-pencil-alt"></i></button>
 
