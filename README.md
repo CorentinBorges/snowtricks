@@ -4,7 +4,7 @@
 
 This is a blog for trick's lovers !
 
-##Required
+## Required
 * Bootstrap 4.5.0
 * Symfony 4.18
 * Jquery 3.5.1
