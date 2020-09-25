@@ -6,7 +6,7 @@ This is a blog for trick's lovers !
 
 ## Required
 * Bootstrap 4.5.0
-* Symfony 4.18
+* Symfony 5.1
 * Jquery 3.5.1
 * WAMP Server
     * PHP 7.4
