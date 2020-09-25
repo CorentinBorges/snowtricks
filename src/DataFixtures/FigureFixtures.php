@@ -48,7 +48,6 @@ class FigureFixtures extends GlobalFixture
             $this->addReference(Figure::class . '_' . $i, $figure);
             $manager->persist($figure);
         }
-
         $manager->flush();
     }
 }
