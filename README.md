@@ -4,6 +4,15 @@
 
 This is a blog for trick's lovers !
 
+##Required
+* Bootstrap 4.5.0
+* Symfony 4.18
+* Jquery 3.5.1
+* WAMP Server
+    * PHP 7.4
+    * MySQL 5.7
+    * composer 1.10
+
 ## Installing project
 
 1.  Download:
@@ -32,6 +41,13 @@ This is a blog for trick's lovers !
     ```
     MAILER_DSN=gmail://yourMail:yourPassword@host
     ```
+    
+6. Connect the website locally with symfony:
+    ```
+    symfony serve -d
+    ```
+Your url must be 127.0.0.1:8000 if you don't have any other projects running with symfony at the same time.
+
 
 ## Built With
 *   [Symfony 5.1](https://symfony.com/)
@@ -39,4 +55,3 @@ This is a blog for trick's lovers !
 *   [Twig 3.0.3](https://twig.symfony.com/)
 *   [Doctrine 3.3](https://www.doctrine-project.org/index.html)
 *   [Mailer 5.1](https://symfony.com/doc/current/mailer.html)
-
